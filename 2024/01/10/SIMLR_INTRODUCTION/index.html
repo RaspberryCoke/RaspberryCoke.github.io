@@ -22,7 +22,7 @@
 
   <meta name="description" content="本文是对NAGFS中提及的SIMLR算法的解读。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SIMLR论文解读">
+<meta property="og:title" content="NAGFS(3)SIMLR论文解读">
 <meta property="og:url" content="http://example.com/2024/01/10/SIMLR_INTRODUCTION/index.html">
 <meta property="og:site_name" content="RaspberryCoke">
 <meta property="og:description" content="本文是对NAGFS中提及的SIMLR算法的解读。">
@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://example.com/2024/01/10/SIMLR_INTRODUCTION/1.png">
 <meta property="og:image" content="http://example.com/2024/01/10/SIMLR_INTRODUCTION/2.png">
 <meta property="article:published_time" content="2024-01-10T07:24:39.000Z">
-<meta property="article:modified_time" content="2024-01-18T12:08:03.682Z">
+<meta property="article:modified_time" content="2024-01-18T14:47:34.072Z">
 <meta property="article:author" content="树莓可乐">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="机器学习">
@@ -50,7 +50,7 @@
   };
 </script>
 
-  <title>SIMLR论文解读 | RaspberryCoke</title>
+  <title>NAGFS(3)SIMLR论文解读 | RaspberryCoke</title>
   
 
 
@@ -172,7 +172,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          SIMLR论文解读
+          NAGFS(3)SIMLR论文解读
         </h1>
 
         <div class="post-meta">
@@ -189,7 +189,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-01-18 20:08:03" itemprop="dateModified" datetime="2024-01-18T20:08:03+08:00">2024-01-18</time>
+                <time title="修改时间：2024-01-18 22:47:34" itemprop="dateModified" datetime="2024-01-18T22:47:34+08:00">2024-01-18</time>
               </span>
 
           
@@ -203,66 +203,193 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文是对NAGFS中提及的SIMLR算法的解读。<br><span id="more"></span><br><img src="1.png" alt="图1：SIMLR论文"></p>
-<pre><code>    注：本文涉及到了很多数学知识，包括凸优化，矩阵论等内容。
-</code></pre><h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>在我们本次实验中，我们采用了NAGFS方法进行疾病的诊断。NAGFS方法其中主要涉及到了两种算法：<strong>SIMLR和SNF算法</strong>。在本次实验中，我们花了很大的精力去研究SIMLR方法中的<strong>数学公式</strong>，学习到了很多机器学习相关的知识。本文是对我们学习的成果的简要总结。</p>
+        本文是对NAGFS中提及的SIMLR算法的解读。 <span id="more"></span> <img src="1.png"
+alt="图1：SIMLR论文" />
+<center>
+图1：SIMLR论文
+</center>
+<pre><code>    注：本文涉及到了很多数学知识，包括凸优化，矩阵论等内容。</code></pre>
+<h1 id="概述">概述</h1>
+<p>在我们本次实验中，我们采用了NAGFS方法进行疾病的诊断。NAGFS方法其中主要涉及到了两种算法：<strong>SIMLR和SNF算法</strong>。在本次实验中，我们花了很大的精力去研究SIMLR方法中的<strong>数学公式</strong>，学习到了很多机器学习相关的知识。本文是对我们学习的成果的简要总结。</p>
 <p>SIMLR算法的诞生，是为了解决从输入的单细胞RNA序列数据中学习细胞与细胞之间相似度矩阵的问题。而单细胞的RNA序列数据和我们在本次实验（NAGFS）中的数据都是高维稀疏特征数据，在数据特点上有相似性。该算法对大规模数据有良好的性能，同时又提高了聚类的效果。</p>
-<p>相较于传统的算法，SIMLR算法主要有以下优势：</p>
-<ol>
-<li><p>它通过<strong>多个核函数</strong>的方法来学习一个最符合输入数据集的相似性矩阵。常规的聚类算法有时并不适用于特征维度过高的数据。同时，研究表明，使用多个核函数可以更好地描述数据的信息，并且<strong>相比于单个核函数，多个核函数具有更好的灵活性</strong>。</p>
-</li>
-<li><p>SIMLR算法应用<strong>秩约束</strong>来增强相似度矩阵的分块对角结构，这样做可以提高对数据特征的捕捉能力。</p>
-</li>
-<li><p>SIMLR算法还使用<strong>图扩散</strong>的方法，以提高对弱相似度的识别能力。  </p>
-</li>
+<p>相较于传统的算法，SIMLR算法主要有以下优势： 1.
+它通过<strong>多个核函数</strong>的方法来学习一个最符合输入数据集的相似性矩阵。常规的聚类算法有时并不适用于特征维度过高的数据。同时，研究表明，使用多个核函数可以更好地描述数据的信息，并且<strong>相比于单个核函数，多个核函数具有更好的灵活性</strong>。</p>
+<ol start="2" type="1">
+<li><p>SIMLR算法应用<strong>秩约束</strong>来增强相似度矩阵的分块对角结构，这样做可以提高对数据特征的捕捉能力。</p></li>
+<li><p>SIMLR算法还使用<strong>图扩散</strong>的方法，以提高对弱相似度的识别能力。</p></li>
 </ol>
-<h1 id="算法框架"><a href="#算法框架" class="headerlink" title="算法框架"></a>算法框架</h1><p><img src="2.png" alt="图2：算法流程"></p>
-<p>输入一个$N$×$M$的的基因表达矩阵，$N$代表细胞个数，$M$代表基因数。SIMLR算法将输出一个$N$×$N$的相似性矩阵。其中$S_{ij}$表示两个细胞之间的相似度。给定一个细胞种类数$C$，算法假定输出的相似度矩阵将有一个含$C$个分块的分块对角矩阵，各个分块中的细胞更为相似。我们对两个细胞之间的距离定义为：</p>
-<script type="math/tex; mode=display">\begin{equation}
-D\left( c_{i},c_{j} \right) = 2 - 2\sum_{l}^{}w_{l}K_{l}\left( c_{i},c_{j} \right)\
-\end{equation}</script><p>其中$S<em>{ij}$,$w</em>{l}$代表核函数的权重，每个$w<em>{l}$代表每个核的重要性。$K</em>{l}\left( c<em>{i},c</em>{j} \right)$是细胞<em>i</em>与细胞<em>j</em>作为参数的函数。</p>
+<h1 id="算法框架">算法框架</h1>
+<img src="2.png" />
+<center>
+图2：算法流程
+</center>
+<p>输入一个<span class="math inline">\(N\)</span>×<span
+class="math inline">\(M\)</span>的的基因表达矩阵，<span
+class="math inline">\(N\)</span>代表细胞个数，<span
+class="math inline">\(M\)</span>代表基因数。SIMLR算法将输出一个<span
+class="math inline">\(N\)</span>×<span
+class="math inline">\(N\)</span>的相似性矩阵。其中<span
+class="math inline">\(S_{ij}\)</span>表示两个细胞之间的相似度。给定一个细胞种类数<span
+class="math inline">\(C\)</span>，算法假定输出的相似度矩阵将有一个含<span
+class="math inline">\(C\)</span>个分块的分块对角矩阵，各个分块中的细胞更为相似。我们对两个细胞之间的距离定义为：</p>
+<p><span class="math display">\[\begin{equation}
+D\left( c_{i},c_{j} \right) = 2 - 2\sum_{l}^{}w_{l}K_{l}\left(
+c_{i},c_{j} \right)\
+\end{equation}\]</span></p>
+<p>其中<span class="math inline">\(S_{ij}\)</span>,<span
+class="math inline">\(w_{l}\)</span>代表核函数的权重，每个<span
+class="math inline">\(w_{l}\)</span>代表每个核的重要性。<span
+class="math inline">\(K_{l}\left( c_{i},c_{j}
+\right)\)</span>是细胞<em>i</em>与细胞<em>j</em>作为参数的函数。</p>
 <p>算法依据如下损失函数来计算细胞与细胞之间的相似性：</p>
-<script type="math/tex; mode=display">\begin{equation}\begin{aligned}\mathrm{minimize}-&\sum_{i,j,l}w_lK_l(c_i,c_j)S_{ij}+\beta\parallel S\|_F^2+\\\gamma&\mathrm{tr}(L^T(I_N-S)L)+\rho\sum_lw_llogw_l\end{aligned}\end{equation}</script><script type="math/tex; mode=display">\text{subject to }L^TL=I_C,\sum_\text{l}{ w _ l = 1 , w _ l \geq 0 , \sum _ j S _ { i j }=1,\text{and }S_{ij}\geq0}</script><p>以上是公式2.</p>
-<p>其中$I<em>{N}$和$I</em>{C}$分别为$N$×$N$和$C$×$C$的单位矩阵，$\text{tr}(.)$代表矩阵的秩，$\beta$和$\gamma$均为非零值，$\parallel S \parallel_{F}^{2}$为F范数表示，$L$为辅助低秩矩阵，用来对$S$进行低秩约束。因此这个损失函数求解三个参数：相似度矩阵$S$，核函数权重向量$w$，以及一个结构为$N$×$C$的秩约束矩阵$L$。</p>
-<p>损失函数的第一项含义为，如果两个细胞间的距离很远，则它们的相似度应该很低。第二项是一个对$S$的正则化，防止$S$矩阵过于接近一个单位矩阵。如果细胞可以被划分为$C$类，则每一类中的细胞更为相似，理想情况下矩阵$S$的秩为$C$。因此，损失函数的第三项以及$L$矩阵的引入增强了$S$的低秩结构，而矩阵$(I_{N} - S)$为拉普拉斯矩阵，在一个相似图中，每个节点代表一个细胞，边衡量节点间的相似性。第四项对核函数的权重进行约束，防止单核函数情况的出现。实践证明，这个正则化项提高了相似矩阵的表现。</p>
-<h1 id="SIMLR算法核函数构造"><a href="#SIMLR算法核函数构造" class="headerlink" title="SIMLR算法核函数构造"></a>SIMLR算法核函数构造</h1><p>由于高斯核相较于其他类型的核能够带来更好的性能，因此采用带有不同超参数的高斯核为基础构建不同的核函数。</p>
-<script type="math/tex; mode=display">\begin{equation}
-K\left( c_{i},c_{j} \right) = \frac{1}{\epsilon_{ij}\sqrt{2\pi}}exp\left( - \frac{\parallel c_{i} - c_{j} \parallel_{2}^{2}}{2\epsilon_{ij}^{2}} \right)
-\end{equation}</script><p>其中$\parallel c<em>{i} - c</em>{j} \parallel$表示细胞$i$与细胞$j$之间的欧几里得距离，方差$\epsilon_{ij}$的定义式如下：</p>
-<script type="math/tex; mode=display">\begin{equation}
+<p><span
+class="math display">\[\begin{equation}\begin{aligned}\mathrm{minimize}-&amp;\sum_{i,j,l}w_lK_l(c_i,c_j)S_{ij}+\beta\parallel
+S\|_F^2+\\\gamma&amp;\mathrm{tr}(L^T(I_N-S)L)+\rho\sum_lw_llogw_l\end{aligned}\end{equation}\]</span></p>
+<p><span class="math display">\[\text{subject to
+}L^TL=I_C,\sum_\text{l}{ w _ l = 1 , w _ l \geq 0 , \sum _ j S _ { i j
+}=1,\text{and }S_{ij}\geq0}\]</span></p>
+<p>以上是公式2.</p>
+<p>其中<span class="math inline">\(I_{N}\)</span>和<span
+class="math inline">\(I_{C}\)</span>分别为<span
+class="math inline">\(N\)</span>×<span
+class="math inline">\(N\)</span>和<span
+class="math inline">\(C\)</span>×<span
+class="math inline">\(C\)</span>的单位矩阵，<span
+class="math inline">\(\text{tr}(.)\)</span>代表矩阵的秩，<span
+class="math inline">\(\beta\)</span>和<span
+class="math inline">\(\gamma\)</span>均为非零值，<span
+class="math inline">\(\parallel S
+\parallel_{F}^{2}\)</span>为F范数表示，<span
+class="math inline">\(L\)</span>为辅助低秩矩阵，用来对<span
+class="math inline">\(S\)</span>进行低秩约束。因此这个损失函数求解三个参数：相似度矩阵<span
+class="math inline">\(S\)</span>，核函数权重向量<span
+class="math inline">\(w\)</span>，以及一个结构为<span
+class="math inline">\(N\)</span>×<span
+class="math inline">\(C\)</span>的秩约束矩阵<span
+class="math inline">\(L\)</span>。</p>
+<p>损失函数的第一项含义为，如果两个细胞间的距离很远，则它们的相似度应该很低。第二项是一个对<span
+class="math inline">\(S\)</span>的正则化，防止<span
+class="math inline">\(S\)</span>矩阵过于接近一个单位矩阵。如果细胞可以被划分为<span
+class="math inline">\(C\)</span>类，则每一类中的细胞更为相似，理想情况下矩阵<span
+class="math inline">\(S\)</span>的秩为<span
+class="math inline">\(C\)</span>。因此，损失函数的第三项以及<span
+class="math inline">\(L\)</span>矩阵的引入增强了<span
+class="math inline">\(S\)</span>的低秩结构，而矩阵<span
+class="math inline">\((I_{N} -
+S)\)</span>为拉普拉斯矩阵，在一个相似图中，每个节点代表一个细胞，边衡量节点间的相似性。第四项对核函数的权重进行约束，防止单核函数情况的出现。实践证明，这个正则化项提高了相似矩阵的表现。</p>
+<h1 id="simlr算法核函数构造">SIMLR算法核函数构造</h1>
+<p>由于高斯核相较于其他类型的核能够带来更好的性能，因此采用带有不同超参数的高斯核为基础构建不同的核函数。</p>
+<p><span class="math display">\[\begin{equation}
+K\left( c_{i},c_{j} \right) =
+\frac{1}{\epsilon_{ij}\sqrt{2\pi}}exp\left( - \frac{\parallel c_{i} -
+c_{j} \parallel_{2}^{2}}{2\epsilon_{ij}^{2}} \right)
+\end{equation}\]</span></p>
+<p>其中<span class="math inline">\(\parallel c_{i} - c_{j}
+\parallel\)</span>表示细胞<span
+class="math inline">\(i\)</span>与细胞<span
+class="math inline">\(j\)</span>之间的欧几里得距离，方差<span
+class="math inline">\(\epsilon_{ij}\)</span>的定义式如下：</p>
+<p><span class="math display">\[\begin{equation}
 \mu_i = \frac{\sum_{l\in\mathrm{KNN}(c_i)\|c_i-c_j\|_2}}k
-\end{equation}</script><script type="math/tex; mode=display">\begin{equation}
+\end{equation}\]</span></p>
+<p><span class="math display">\[\begin{equation}
 \varepsilon_{ij} = \frac{\sigma\left( \mu_{i} + \mu_{j} \right)}{2}
-\end{equation}</script><p>其中$KNN(c_{i})$表示细胞$i$的前$k$个邻近的细胞。因此，每个核一对由参数$(\sigma,k)$决定，设定<br>$k$=10，12，14,…,30 以及$\sigma$ =1.0，1.25，1.5，1.75，2，产生了55个不同的核函数。然而，实践证明，算法对核函数的数量以及参数的选择并不敏感。</p>
-<h2 id="核函数权重初始化"><a href="#核函数权重初始化" class="headerlink" title="核函数权重初始化"></a>核函数权重初始化</h2><p>核函数的权重$w$被初始化为核函数数量的倒数：</p>
-<script type="math/tex; mode=display">\begin{equation}
+\end{equation}\]</span></p>
+<p>其中<span class="math inline">\(KNN(c_{i})\)</span>表示细胞<span
+class="math inline">\(i\)</span>的前<span
+class="math inline">\(k\)</span>个邻近的细胞。因此，每个核一对由参数<span
+class="math inline">\((\sigma,k)\)</span>决定，设定<span
+class="math inline">\(k\)</span>=10，12，14,...,30 以及<span
+class="math inline">\(\sigma\)</span>
+=1.0，1.25，1.5，1.75，2，产生了55个不同的核函数。然而，实践证明，算法对核函数的数量以及参数的选择并不敏感。</p>
+<h2 id="核函数权重初始化">核函数权重初始化</h2>
+<p>核函数的权重<span
+class="math inline">\(w\)</span>被初始化为核函数数量的倒数：</p>
+<p><span class="math display">\[\begin{equation}
 w = \left( \frac{1}{G},\frac{1}{G},...,\frac{1}{G} \right)
-\end{equation}</script><p>相似度矩阵$S$被初始化为：</p>
-<script type="math/tex; mode=display">\begin{equation}
-S_{ij}=\sum_lw_lK_l{\left(c_i,c_j\right)}\end{equation}</script><p>而矩阵$L$被初始化为拉普拉斯矩阵$(I_{N} - S)$的前$C$个特征向量。</p>
-<h1 id="优化算法"><a href="#优化算法" class="headerlink" title="优化算法"></a>优化算法</h1><p>我们对$S$,$L$和$w$进行优化。上文中的优化式非凸，但是当两个变量固定时得到的目标函数为凸函数。因此我们可以有效的应用凸优化算法来进行求解。</p>
-<h2 id="步骤一：固定L和w对S进行更新。"><a href="#步骤一：固定L和w对S进行更新。" class="headerlink" title="步骤一：固定L和w对S进行更新。"></a>步骤一：固定L和w对S进行更新。</h2><p>优化问题可以被重写为：</p>
-<script type="math/tex; mode=display">\begin{equation}\begin{aligned}\underset{S}{\operatorname*{minimize}}-&\sum_{i,j}\Biggl[\sum_{l}w_{l}K_{l}\Big(c_{i},c_{j}\Big)+\gamma\left(LL^{T}\right)_{ij}\Biggr]S_{ij}+\beta\parallel S\parallel_{F}^{2}\\\\\text{subject to }&\sum_{j}S_{ij}=1\mathrm{~and~}S_{ij}\geq0\text{ for all }(i,j)\end{aligned}\end{equation}</script><p>目标函数中第一项求和式以及约束项均为线性，而第二项是一个二次项，它可以在多项式复杂度的时间内计算出来。</p>
-<h2 id="步骤二：固定S和w对L进行更新。"><a href="#步骤二：固定S和w对L进行更新。" class="headerlink" title="步骤二：固定S和w对L进行更新。"></a>步骤二：固定S和w对L进行更新。</h2><p>优化问题可以被重写为：</p>
-<script type="math/tex; mode=display">\begin{equation}\underset{L}{maximize}\text{ tr}(L^{T}(S-I_{N})L)\end{equation}</script><script type="math/tex; mode=display">
-\text{subject to }L^{T}L = I_{C}</script><p>当$L$是与$\left( S - I<em>{N} \right)$的$C$个最大特征值相关联的特征空间的正交基时，$L^{T}\left( S - I</em>{N} \right)L$的迹最大，因此可以使用任何矩阵数值工具箱有效的计算$L$。此时对$L$矩阵的求解就是拉普拉斯矩阵$\left( S - I_{N} \right)$对应的$C$个最大特征值的特征向量。</p>
-<h2 id="步骤三：固定S和L对w进行更新。"><a href="#步骤三：固定S和L对w进行更新。" class="headerlink" title="步骤三：固定S和L对w进行更新。"></a>步骤三：固定S和L对w进行更新。</h2><p>同样地，优化问题可以被重写为如下形式：</p>
-<script type="math/tex; mode=display">\begin{equation}\underset{w}{\operatorname*{maximimize}}\sum_lw_l\sum_{i,j}K_l{\left(c_i,c_j\right)}S_{ij}-\rho\sum_lw_l\log w_l\end{equation}</script><script type="math/tex; mode=display">\text{subject to}\sum_lw_l=1,w_l\geq0</script><p>对于这样一个包含凸函数和线性约束的问题，任何一个标准凸优化算法都可以进行求解。</p>
-<h2 id="步骤四：通过扩散增强相似性。"><a href="#步骤四：通过扩散增强相似性。" class="headerlink" title="步骤四：通过扩散增强相似性。"></a>步骤四：通过扩散增强相似性。</h2><p>我们应用了一种扩散方法来减少噪声和dropout现象对$S$矩阵的影响。给定矩阵$S$，我们构建如下形式的过渡矩阵$P$：</p>
-<script type="math/tex; mode=display">\begin{equation}
+\end{equation}\]</span></p>
+<p>相似度矩阵<span class="math inline">\(S\)</span>被初始化为：</p>
+<p><span class="math display">\[\begin{equation}
+S_{ij}=\sum_lw_lK_l{\left(c_i,c_j\right)}\end{equation}\]</span></p>
+<p>而矩阵<span
+class="math inline">\(L\)</span>被初始化为拉普拉斯矩阵<span
+class="math inline">\((I_{N} - S)\)</span>的前<span
+class="math inline">\(C\)</span>个特征向量。</p>
+<h1 id="优化算法">优化算法</h1>
+<p>我们对<span class="math inline">\(S\)</span>,<span
+class="math inline">\(L\)</span>和<span
+class="math inline">\(w\)</span>进行优化。上文中的优化式非凸，但是当两个变量固定时得到的目标函数为凸函数。因此我们可以有效的应用凸优化算法来进行求解。</p>
+<h2 id="步骤一固定l和w对s进行更新">步骤一：固定L和w对S进行更新。</h2>
+<p>优化问题可以被重写为：</p>
+<p><span
+class="math display">\[\begin{equation}\begin{aligned}\underset{S}{\operatorname*{minimize}}-&amp;\sum_{i,j}\Biggl[\sum_{l}w_{l}K_{l}\Big(c_{i},c_{j}\Big)+\gamma\left(LL^{T}\right)_{ij}\Biggr]S_{ij}+\beta\parallel
+S\parallel_{F}^{2}\\\\\text{subject to
+}&amp;\sum_{j}S_{ij}=1\mathrm{~and~}S_{ij}\geq0\text{ for all
+}(i,j)\end{aligned}\end{equation}\]</span></p>
+<p>目标函数中第一项求和式以及约束项均为线性，而第二项是一个二次项，它可以在多项式复杂度的时间内计算出来。</p>
+<h2 id="步骤二固定s和w对l进行更新">步骤二：固定S和w对L进行更新。</h2>
+<p>优化问题可以被重写为：</p>
+<p><span
+class="math display">\[\begin{equation}\underset{L}{maximize}\text{
+tr}(L^{T}(S-I_{N})L)\end{equation}\]</span></p>
+<p><span class="math display">\[
+\text{subject to }L^{T}L = I_{C}
+\]</span></p>
+<p>当<span class="math inline">\(L\)</span>是与<span
+class="math inline">\(\left( S - I_{N} \right)\)</span>的<span
+class="math inline">\(C\)</span>个最大特征值相关联的特征空间的正交基时，<span
+class="math inline">\(L^{T}\left( S - I_{N}
+\right)L\)</span>的迹最大，因此可以使用任何矩阵数值工具箱有效的计算<span
+class="math inline">\(L\)</span>。此时对<span
+class="math inline">\(L\)</span>矩阵的求解就是拉普拉斯矩阵<span
+class="math inline">\(\left( S - I_{N} \right)\)</span>对应的<span
+class="math inline">\(C\)</span>个最大特征值的特征向量。</p>
+<h2 id="步骤三固定s和l对w进行更新">步骤三：固定S和L对w进行更新。</h2>
+<p>同样地，优化问题可以被重写为如下形式：</p>
+<p><span
+class="math display">\[\begin{equation}\underset{w}{\operatorname*{maximimize}}\sum_lw_l\sum_{i,j}K_l{\left(c_i,c_j\right)}S_{ij}-\rho\sum_lw_l\log
+w_l\end{equation}\]</span> <span class="math display">\[\text{subject
+to}\sum_lw_l=1,w_l\geq0\]</span>
+对于这样一个包含凸函数和线性约束的问题，任何一个标准凸优化算法都可以进行求解。</p>
+<h2 id="步骤四通过扩散增强相似性">步骤四：通过扩散增强相似性。</h2>
+<p>我们应用了一种扩散方法来减少噪声和dropout现象对<span
+class="math inline">\(S\)</span>矩阵的影响。给定矩阵<span
+class="math inline">\(S\)</span>，我们构建如下形式的过渡矩阵<span
+class="math inline">\(P\)</span>：</p>
+<p><span class="math display">\[\begin{equation}
 P_{ij}=\frac{S_{ij}1_{\{j\in A_K(i)\}}}{\sum_lS_{il}1_{\{l\in A_K(i)\}}}
-\end{equation}</script><p>其中$1<em>{j}$表示指标函数，$A</em>{K}(i)$代表一个集合，里面包含了细胞$i$的$K$个近邻细胞的索引。在这种构造下，构建出来的过渡矩阵是稀疏的，并且保留了极大部分的相似度结构。算法的更新方法如下所示：</p>
-<script type="math/tex; mode=display">\begin{equation}
+\end{equation}\]</span></p>
+<p>其中<span class="math inline">\(1_{j}\)</span>表示指标函数，<span
+class="math inline">\(A_{K}(i)\)</span>代表一个集合，里面包含了细胞<span
+class="math inline">\(i\)</span>的<span
+class="math inline">\(K\)</span>个近邻细胞的索引。在这种构造下，构建出来的过渡矩阵是稀疏的，并且保留了极大部分的相似度结构。算法的更新方法如下所示：</p>
+<p><span class="math display">\[\begin{equation}
 H_{ij}^{(t + 1)} = \tau H_{ij}^{(t)}P + (1 - \tau)I_{N}
-\end{equation}</script><p>其中$H<em>{ij}^{(0)} = S</em>{ij}$作为输入，而最终迭代出来的结果$H<em>{ij}$作为新的相似性度量$S</em>{ij}$。这个额外的扩散方法将会很大程度上避免噪声值所带来的影响。然而，这个算法的计算复杂度较高，因此在面对大规模数据集时它无法发挥有效作用。</p>
-<p>SIMLR算法重复步骤1-4直到算法收敛。在算法的实现过程中，SIMLR在大约十次的迭代内收敛，其中还包括了调优算法超参数的方法。</p>
-<h1 id="后续步骤"><a href="#后续步骤" class="headerlink" title="后续步骤"></a>后续步骤</h1><h2 id="用SIMLR进行降维"><a href="#用SIMLR进行降维" class="headerlink" title="用SIMLR进行降维"></a>用SIMLR进行降维</h2><p>SIMLR基于SNE算法进行降维，并进行了一个重要的调整。不同点在于，t-SNE算法基于高斯核来计算高维度空间下数据之间的相似度，随后将其映射到低维空间并保留这个相似度信息。我们没有选择直接输入基因表达矩阵而是输入了相似度矩阵$S$。</p>
-<h2 id="利用习得相似性进行基因优先排序"><a href="#利用习得相似性进行基因优先排序" class="headerlink" title="利用习得相似性进行基因优先排序"></a>利用习得相似性进行基因优先排序</h2><p>通过计算某个基因在不同细胞中表达的值与习得的相似度的相关程度来对基因进行排序。给定相似度矩阵$S$和某个基因在所有细胞中的表达结果$f$，表达式如下：</p>
-<script type="math/tex; mode=display">\begin{equation}
-LS(f) = \frac{f^{'}Sf}{f^{'}f}
-\end{equation}</script><p>这是一个著名的用来衡量基因之间的一致性和相似性的无监督特征排序算法。拉普拉斯分数越高，则基因对细胞亚群的整体分化就越重要。然而，拉普拉斯分数对相似度矩阵中的噪声值非常敏感。为了克服这个问题，采用了下面这种方法。随机选取一定比例的细胞（如细胞总数的80%），随后根据相似性子集上的拉普拉斯分数来对基因进行排序。</p>
-<h1 id="SIMLR在大数据集应用"><a href="#SIMLR在大数据集应用" class="headerlink" title="SIMLR在大数据集应用"></a>SIMLR在大数据集应用</h1><p>这一部分介绍了如何优化以上的算法步骤而提高算法处理大规模数据的能力。我们小组在这一部分没有认真细看，以下是对论文这一部分的翻译。其关键思想是使用KNN相似度来近似完全成对相似度。第一步是使用最先进的最近邻搜索技术ANNOY来优化KNN图的索引。ANNOY算法认为，一个近邻点的近邻也可能是一个近邻点。在构建出KNN图后，算法只更新每个细胞所预先选定的前$k$个近邻点。因为得到的相似度矩阵是稀疏的，所以使用Spectra来对$L$进行求解。</p>
-<p>在得到相似度矩阵后，就可以进行细胞可视化和细胞聚类了。聚类时，从t-SNE框架中获得嵌入的过程的计算量很大，因此采用了一种谱聚类算法，它基本上等同于SIMLR算法中对矩阵$L$应用$k$均值。这种简单的算法对稀疏相似性的聚类非常有效，并可扩展到数以万计的细胞中。</p>
+\end{equation}\]</span></p>
+<p>其中<span class="math inline">\(H_{ij}^{(0)} =
+S_{ij}\)</span>作为输入，而最终迭代出来的结果<span
+class="math inline">\(H_{ij}\)</span>作为新的相似性度量<span
+class="math inline">\(S_{ij}\)</span>。这个额外的扩散方法将会很大程度上避免噪声值所带来的影响。然而，这个算法的计算复杂度较高，因此在面对大规模数据集时它无法发挥有效作用。</p>
+<p>SIMLR算法重复步骤1-4直到算法收敛。在算法的实现过程中，SIMLR在大约十次的迭代内收敛，其中还包括了调优算法超参数的方法。
+# 后续步骤 ## 用SIMLR进行降维</p>
+<p>SIMLR基于SNE算法进行降维，并进行了一个重要的调整。不同点在于，t-SNE算法基于高斯核来计算高维度空间下数据之间的相似度，随后将其映射到低维空间并保留这个相似度信息。我们没有选择直接输入基因表达矩阵而是输入了相似度矩阵<span
+class="math inline">\(S\)</span>。</p>
+<h2
+id="利用习得相似性进行基因优先排序">利用习得相似性进行基因优先排序</h2>
+<p>通过计算某个基因在不同细胞中表达的值与习得的相似度的相关程度来对基因进行排序。给定相似度矩阵<span
+class="math inline">\(S\)</span>和某个基因在所有细胞中的表达结果<span
+class="math inline">\(f\)</span>，表达式如下：</p>
+<p><span class="math display">\[\begin{equation}
+LS(f) = \frac{f^{&#39;}Sf}{f^{&#39;}f}
+\end{equation}\]</span></p>
+<p>这是一个著名的用来衡量基因之间的一致性和相似性的无监督特征排序算法。拉普拉斯分数越高，则基因对细胞亚群的整体分化就越重要。然而，拉普拉斯分数对相似度矩阵中的噪声值非常敏感。为了克服这个问题，采用了下面这种方法。随机选取一定比例的细胞（如细胞总数的80%），随后根据相似性子集上的拉普拉斯分数来对基因进行排序。</p>
+<h1 id="simlr在大数据集应用">SIMLR在大数据集应用</h1>
+<p>这一部分介绍了如何优化以上的算法步骤而提高算法处理大规模数据的能力。我们小组在这一部分没有认真细看，以下是对论文这一部分的翻译。其关键思想是使用KNN相似度来近似完全成对相似度。第一步是使用最先进的最近邻搜索技术ANNOY来优化KNN图的索引。ANNOY算法认为，一个近邻点的近邻也可能是一个近邻点。在构建出KNN图后，算法只更新每个细胞所预先选定的前<span
+class="math inline">\(k\)</span>个近邻点。因为得到的相似度矩阵是稀疏的，所以使用Spectra来对<span
+class="math inline">\(L\)</span>进行求解。</p>
+<p>在得到相似度矩阵后，就可以进行细胞可视化和细胞聚类了。聚类时，从t-SNE框架中获得嵌入的过程的计算量很大，因此采用了一种谱聚类算法，它基本上等同于SIMLR算法中对矩阵<span
+class="math inline">\(L\)</span>应用<span
+class="math inline">\(k\)</span>均值。这种简单的算法对稀疏相似性的聚类非常有效，并可扩展到数以万计的细胞中。</p>
 
     </div>
 
@@ -282,12 +409,12 @@ LS(f) = \frac{f^{'}Sf}{f^{'}f}
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/12/28/NAGFS-CODE-INTERPRETATION/" rel="prev" title="NAGFS示例代码解读">
-      <i class="fa fa-chevron-left"></i> NAGFS示例代码解读
+    <a href="/2023/12/28/NAGFS-CODE-INTERPRETATION/" rel="prev" title="NAGFS(2)示例代码解读">
+      <i class="fa fa-chevron-left"></i> NAGFS(2)示例代码解读
     </a></div>
       <div class="post-nav-item">
-    <a href="/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/" rel="next" title="NAGFS实验总结">
-      NAGFS实验总结 <i class="fa fa-chevron-right"></i>
+    <a href="/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/" rel="next" title="NAGFS(4)实验总结">
+      NAGFS(4)实验总结 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -348,7 +475,7 @@ LS(f) = \frac{f^{'}Sf}{f^{'}f}
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6"><span class="nav-number">2.</span> <span class="nav-text">算法框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SIMLR%E7%AE%97%E6%B3%95%E6%A0%B8%E5%87%BD%E6%95%B0%E6%9E%84%E9%80%A0"><span class="nav-number">3.</span> <span class="nav-text">SIMLR算法核函数构造</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%87%BD%E6%95%B0%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">3.1.</span> <span class="nav-text">核函数权重初始化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">优化算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%9A%E5%9B%BA%E5%AE%9AL%E5%92%8Cw%E5%AF%B9S%E8%BF%9B%E8%A1%8C%E6%9B%B4%E6%96%B0%E3%80%82"><span class="nav-number">4.1.</span> <span class="nav-text">步骤一：固定L和w对S进行更新。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%BA%8C%EF%BC%9A%E5%9B%BA%E5%AE%9AS%E5%92%8Cw%E5%AF%B9L%E8%BF%9B%E8%A1%8C%E6%9B%B4%E6%96%B0%E3%80%82"><span class="nav-number">4.2.</span> <span class="nav-text">步骤二：固定S和w对L进行更新。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%89%EF%BC%9A%E5%9B%BA%E5%AE%9AS%E5%92%8CL%E5%AF%B9w%E8%BF%9B%E8%A1%8C%E6%9B%B4%E6%96%B0%E3%80%82"><span class="nav-number">4.3.</span> <span class="nav-text">步骤三：固定S和L对w进行更新。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E5%9B%9B%EF%BC%9A%E9%80%9A%E8%BF%87%E6%89%A9%E6%95%A3%E5%A2%9E%E5%BC%BA%E7%9B%B8%E4%BC%BC%E6%80%A7%E3%80%82"><span class="nav-number">4.4.</span> <span class="nav-text">步骤四：通过扩散增强相似性。</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8E%E7%BB%AD%E6%AD%A5%E9%AA%A4"><span class="nav-number">5.</span> <span class="nav-text">后续步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8SIMLR%E8%BF%9B%E8%A1%8C%E9%99%8D%E7%BB%B4"><span class="nav-number">5.1.</span> <span class="nav-text">用SIMLR进行降维</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E4%B9%A0%E5%BE%97%E7%9B%B8%E4%BC%BC%E6%80%A7%E8%BF%9B%E8%A1%8C%E5%9F%BA%E5%9B%A0%E4%BC%98%E5%85%88%E6%8E%92%E5%BA%8F"><span class="nav-number">5.2.</span> <span class="nav-text">利用习得相似性进行基因优先排序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SIMLR%E5%9C%A8%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%9B%86%E5%BA%94%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">SIMLR在大数据集应用</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6"><span class="nav-number">2.</span> <span class="nav-text">算法框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#simlr%E7%AE%97%E6%B3%95%E6%A0%B8%E5%87%BD%E6%95%B0%E6%9E%84%E9%80%A0"><span class="nav-number">3.</span> <span class="nav-text">SIMLR算法核函数构造</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%87%BD%E6%95%B0%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">3.1.</span> <span class="nav-text">核函数权重初始化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">优化算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%80%E5%9B%BA%E5%AE%9Al%E5%92%8Cw%E5%AF%B9s%E8%BF%9B%E8%A1%8C%E6%9B%B4%E6%96%B0"><span class="nav-number">4.1.</span> <span class="nav-text">步骤一：固定L和w对S进行更新。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%BA%8C%E5%9B%BA%E5%AE%9As%E5%92%8Cw%E5%AF%B9l%E8%BF%9B%E8%A1%8C%E6%9B%B4%E6%96%B0"><span class="nav-number">4.2.</span> <span class="nav-text">步骤二：固定S和w对L进行更新。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%89%E5%9B%BA%E5%AE%9As%E5%92%8Cl%E5%AF%B9w%E8%BF%9B%E8%A1%8C%E6%9B%B4%E6%96%B0"><span class="nav-number">4.3.</span> <span class="nav-text">步骤三：固定S和L对w进行更新。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E5%9B%9B%E9%80%9A%E8%BF%87%E6%89%A9%E6%95%A3%E5%A2%9E%E5%BC%BA%E7%9B%B8%E4%BC%BC%E6%80%A7"><span class="nav-number">4.4.</span> <span class="nav-text">步骤四：通过扩散增强相似性。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E4%B9%A0%E5%BE%97%E7%9B%B8%E4%BC%BC%E6%80%A7%E8%BF%9B%E8%A1%8C%E5%9F%BA%E5%9B%A0%E4%BC%98%E5%85%88%E6%8E%92%E5%BA%8F"><span class="nav-number">4.5.</span> <span class="nav-text">利用习得相似性进行基因优先排序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#simlr%E5%9C%A8%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%9B%86%E5%BA%94%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">SIMLR在大数据集应用</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
