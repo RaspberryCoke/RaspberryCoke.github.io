@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文是对NAGFS中提及的SIMLR算法的解读。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SIMLR论文解读">
+<meta property="og:url" content="http://example.com/2024/01/10/SIMLR_INTRODUCTION/index.html">
+<meta property="og:site_name" content="RaspberryCoke">
+<meta property="og:description" content="本文是对NAGFS中提及的SIMLR算法的解读。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/01/10/SIMLR_INTRODUCTION/1.png">
+<meta property="og:image" content="http://example.com/2024/01/10/SIMLR_INTRODUCTION/2.png">
+<meta property="article:published_time" content="2024-01-10T07:24:39.000Z">
+<meta property="article:modified_time" content="2024-01-18T08:51:25.687Z">
+<meta property="article:author" content="树莓可乐">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/01/10/SIMLR_INTRODUCTION/1.png">
+
+<link rel="canonical" href="http://example.com/2024/01/10/SIMLR_INTRODUCTION/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>SIMLR论文解读 | RaspberryCoke</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">RaspberryCoke</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学习记录</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/RaspberryCoke" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/10/SIMLR_INTRODUCTION/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="树莓可乐">
+      <meta itemprop="description" content="认真但不沉重，坚定却仍然轻快">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RaspberryCoke">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SIMLR论文解读
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-01-10 15:24:39" itemprop="dateCreated datePublished" datetime="2024-01-10T15:24:39+08:00">2024-01-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-01-18 16:51:25" itemprop="dateModified" datetime="2024-01-18T16:51:25+08:00">2024-01-18</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文是对NAGFS中提及的SIMLR算法的解读。<br><span id="more"></span><br><img src="1.png" alt="图1：SIMLR论文"></p>
+<pre><code>    注：本文涉及到了很多数学知识，包括凸优化，矩阵论等内容。
+</code></pre><h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>在我们本次实验中，我们采用了NAGFS方法进行疾病的诊断。NAGFS方法其中主要涉及到了两种算法：<strong>SIMLR和SNF算法</strong>。在本次实验中，我们花了很大的精力去研究SIMLR方法中的<strong>数学公式</strong>，学习到了很多机器学习相关的知识。本文是对我们学习的成果的简要总结。</p>
+<p>SIMLR算法的诞生，是为了解决从输入的单细胞RNA序列数据中学习细胞与细胞之间相似度矩阵的问题。而单细胞的RNA序列数据和我们在本次实验（NAGFS）中的数据都是高维稀疏特征数据，在数据特点上有相似性。该算法对大规模数据有良好的性能，同时又提高了聚类的效果。</p>
+<p>相较于传统的算法，SIMLR算法主要有以下优势：</p>
+<ol>
+<li><p>它通过<strong>多个核函数</strong>的方法来学习一个最符合输入数据集的相似性矩阵。常规的聚类算法有时并不适用于特征维度过高的数据。同时，研究表明，使用多个核函数可以更好地描述数据的信息，并且<strong>相比于单个核函数，多个核函数具有更好的灵活性</strong>。</p>
+</li>
+<li><p>SIMLR算法应用<strong>秩约束</strong>来增强相似度矩阵的分块对角结构，这样做可以提高对数据特征的捕捉能力。</p>
+</li>
+<li><p>SIMLR算法还使用<strong>图扩散</strong>的方法，以提高对弱相似度的识别能力。  </p>
+</li>
+</ol>
+<h1 id="算法框架"><a href="#算法框架" class="headerlink" title="算法框架"></a>算法框架</h1><p><img src="2.png" alt="图2：算法流程"></p>
+<p>输入一个$N$×$M$的的基因表达矩阵，$N$代表细胞个数，$M$代表基因数。SIMLR算法将输出一个$N$×$N$的相似性矩阵。其中$S_{ij}$表示两个细胞之间的相似度。给定一个细胞种类数$C$，算法假定输出的相似度矩阵将有一个含$C$个分块的分块对角矩阵，各个分块中的细胞更为相似。我们对两个细胞之间的距离定义为：</p>
+<script type="math/tex; mode=display">\begin{equation}
+D\left( c_{i},c_{j} \right) = 2 - 2\sum_{l}^{}w_{l}K_{l}\left( c_{i},c_{j} \right)\
+\end{equation}</script><p>其中$S<em>{ij}$,$w</em>{l}$代表核函数的权重，每个$w<em>{l}$代表每个核的重要性。$K</em>{l}\left( c<em>{i},c</em>{j} \right)$是细胞<em>i</em>与细胞<em>j</em>作为参数的函数。</p>
+<p>算法依据如下损失函数来计算细胞与细胞之间的相似性：</p>
+<script type="math/tex; mode=display">\begin{equation}\begin{aligned}\mathrm{minimize}-&\sum_{i,j,l}w_lK_l(c_i,c_j)S_{ij}+\beta\parallel S\|_F^2+\\\gamma&\mathrm{tr}(L^T(I_N-S)L)+\rho\sum_lw_llogw_l\end{aligned}\end{equation}</script><script type="math/tex; mode=display">\text{subject to }L^TL=I_C,\sum_\text{l}{ w _ l = 1 , w _ l \geq 0 , \sum _ j S _ { i j }=1,\text{and }S_{ij}\geq0}</script><p>其中$I<em>{N}$和$I</em>{C}$分别为$N$×$N$和$C$×$C$的单位矩阵，$\text{tr}(.)$代表矩阵的秩，$\beta$和$\gamma$均为非零值，$\parallel S \parallel_{F}^{2}$为F范数表示，$L$为辅助低秩矩阵，用来对$S$进行低秩约束。因此这个损失函数求解三个参数：相似度矩阵$S$，核函数权重向量$w$，以及一个结构为$N$×$C$的秩约束矩阵$L$。</p>
+<p>损失函数的第一项含义为，如果两个细胞间的距离很远，则它们的相似度应该很低。第二项是一个对$S$的正则化，防止$S$矩阵过于接近一个单位矩阵。如果细胞可以被划分为$C$类，则每一类中的细胞更为相似，理想情况下矩阵$S$的秩为$C$。因此，损失函数的第三项以及$L$矩阵的引入增强了$S$的低秩结构，而矩阵$(I_{N} - S)$为拉普拉斯矩阵，在一个相似图中，每个节点代表一个细胞，边衡量节点间的相似性。第四项对核函数的权重进行约束，防止单核函数情况的出现。实践证明，这个正则化项提高了相似矩阵的表现。</p>
+<h1 id="SIMLR算法核函数构造"><a href="#SIMLR算法核函数构造" class="headerlink" title="SIMLR算法核函数构造"></a>SIMLR算法核函数构造</h1><p>由于高斯核相较于其他类型的核能够带来更好的性能，因此采用带有不同超参数的高斯核为基础构建不同的核函数。</p>
+<script type="math/tex; mode=display">\begin{equation}
+K\left( c_{i},c_{j} \right) = \frac{1}{\epsilon_{ij}\sqrt{2\pi}}exp\left( - \frac{\parallel c_{i} - c_{j} \parallel_{2}^{2}}{2\epsilon_{ij}^{2}} \right)
+\end{equation}</script><p>其中$\parallel c<em>{i} - c</em>{j} \parallel$表示细胞$i$与细胞$j$之间的欧几里得距离，方差$\epsilon_{ij}$的定义式如下：</p>
+<script type="math/tex; mode=display">\begin{equation}
+\mu_i = \frac{\sum_{l\in\mathrm{KNN}(c_i)\|c_i-c_j\|_2}}k
+\end{equation}</script><script type="math/tex; mode=display">\begin{equation}
+\varepsilon_{ij} = \frac{\sigma\left( \mu_{i} + \mu_{j} \right)}{2}
+\end{equation}</script><p>其中$KNN(c_{i})$表示细胞$i$的前$k$个邻近的细胞。因此，每个核一对由参数$(\sigma,k)$决定，设定<br>$k$=10，12，14,…,30 以及$\sigma$ =1.0，1.25，1.5，1.75，2，产生了55个不同的核函数。然而，实践证明，算法对核函数的数量以及参数的选择并不敏感。</p>
+<h3 id="核函数权重初始化"><a href="#核函数权重初始化" class="headerlink" title="核函数权重初始化"></a>核函数权重初始化</h3><p>核函数的权重$w$被初始化为核函数数量的倒数：</p>
+<script type="math/tex; mode=display">\begin{equation}
+w = \left( \frac{1}{G},\frac{1}{G},...,\frac{1}{G} \right)
+\end{equation}</script><p>相似度矩阵$S$被初始化为：</p>
+<script type="math/tex; mode=display">\begin{equation}
+S_{ij}=\sum_lw_lK_l{\left(c_i,c_j\right)}\end{equation}</script><p>而矩阵$L$被初始化为拉普拉斯矩阵$(I_{N} - S)$的前$C$个特征向量。</p>
+<h1 id="优化算法"><a href="#优化算法" class="headerlink" title="优化算法"></a>优化算法</h1><p>我们对$S$,$L$和$w$进行优化。上文中的优化式非凸，但是当两个变量固定时得到的目标函数为凸函数。因此我们可以有效的应用凸优化算法来进行求解。</p>
+<h3 id="步骤一：固定-L-和-w-对-S-进行更新。"><a href="#步骤一：固定-L-和-w-对-S-进行更新。" class="headerlink" title="步骤一：固定$L$和$w$对$S$进行更新。"></a>步骤一：固定$L$和$w$对$S$进行更新。</h3><p>优化问题可以被重写为：</p>
+<script type="math/tex; mode=display">\begin{equation}\begin{aligned}\underset{S}{\operatorname*{minimize}}-&\sum_{i,j}\Biggl[\sum_{l}w_{l}K_{l}\Big(c_{i},c_{j}\Big)+\gamma\left(LL^{T}\right)_{ij}\Biggr]S_{ij}+\beta\parallel S\parallel_{F}^{2}\\\\\text{subject to }&\sum_{j}S_{ij}=1\mathrm{~and~}S_{ij}\geq0\text{ for all }(i,j)\end{aligned}\end{equation}</script><p>目标函数中第一项求和式以及约束项均为线性，而第二项是一个二次项，它可以在多项式复杂度的时间内计算出来。</p>
+<h3 id="步骤二：固定-S-和-w-对-L-进行更新。"><a href="#步骤二：固定-S-和-w-对-L-进行更新。" class="headerlink" title="步骤二：固定$S$和$w$对$L$进行更新。"></a>步骤二：固定$S$和$w$对$L$进行更新。</h3><p>优化问题可以被重写为：</p>
+<script type="math/tex; mode=display">\begin{equation}\underset{L}{maximize}\text{ tr}(L^{T}(S-I_{N})L)\end{equation}</script><script type="math/tex; mode=display">
+\text{subject to }L^{T}L = I_{C}</script><p>当$L$是与$\left( S - I<em>{N} \right)$的$C$个最大特征值相关联的特征空间的正交基时，$L^{T}\left( S - I</em>{N} \right)L$的迹最大，因此可以使用任何矩阵数值工具箱有效的计算$L$。此时对$L$矩阵的求解就是拉普拉斯矩阵$\left( S - I_{N} \right)$对应的$C$个最大特征值的特征向量。</p>
+<h3 id="步骤三：固定-S-和-L-对-w-进行更新。"><a href="#步骤三：固定-S-和-L-对-w-进行更新。" class="headerlink" title="步骤三：固定$S$和$L$对$w$进行更新。"></a>步骤三：固定$S$和$L$对$w$进行更新。</h3><p>同样地，优化问题可以被重写为如下形式：</p>
+<script type="math/tex; mode=display">\begin{equation}\underset{w}{\operatorname*{maximimize}}\sum_lw_l\sum_{i,j}K_l{\left(c_i,c_j\right)}S_{ij}-\rho\sum_lw_l\log w_l\end{equation}</script><script type="math/tex; mode=display">\text{subject to}\sum_lw_l=1,w_l\geq0</script><p>对于这样一个包含凸函数和线性约束的问题，任何一个标准凸优化算法都可以进行求解。</p>
+<h3 id="步骤四：通过扩散增强相似性。"><a href="#步骤四：通过扩散增强相似性。" class="headerlink" title="步骤四：通过扩散增强相似性。"></a>步骤四：通过扩散增强相似性。</h3><p>我们应用了一种扩散方法来减少噪声和dropout现象对$S$矩阵的影响。给定矩阵$S$，我们构建如下形式的过渡矩阵$P$：</p>
+<script type="math/tex; mode=display">\begin{equation}
+P_{ij}=\frac{S_{ij}1_{\{j\in A_K(i)\}}}{\sum_lS_{il}1_{\{l\in A_K(i)\}}}
+\end{equation}</script><p>其中$1<em>{j}$表示指标函数，$A</em>{K}(i)$代表一个集合，里面包含了细胞$i$的$K$个近邻细胞的索引。在这种构造下，构建出来的过渡矩阵是稀疏的，并且保留了极大部分的相似度结构。算法的更新方法如下所示：</p>
+<script type="math/tex; mode=display">\begin{equation}
+H_{ij}^{(t + 1)} = \tau H_{ij}^{(t)}P + (1 - \tau)I_{N}
+\end{equation}</script><p>其中$H<em>{ij}^{(0)} = S</em>{ij}$作为输入，而最终迭代出来的结果$H<em>{ij}$作为新的相似性度量$S</em>{ij}$。这个额外的扩散方法将会很大程度上避免噪声值所带来的影响。然而，这个算法的计算复杂度较高，因此在面对大规模数据集时它无法发挥有效作用。</p>
+<p>SIMLR算法重复步骤1-4直到算法收敛。在算法的实现过程中，SIMLR在大约十次的迭代内收敛，其中还包括了调优算法超参数的方法。</p>
+<h1 id="后续步骤"><a href="#后续步骤" class="headerlink" title="后续步骤"></a>后续步骤</h1><h3 id="用SIMLR进行降维"><a href="#用SIMLR进行降维" class="headerlink" title="用SIMLR进行降维"></a>用SIMLR进行降维</h3><p>SIMLR基于SNE算法进行降维，并进行了一个重要的调整。不同点在于，t-SNE算法基于高斯核来计算高维度空间下数据之间的相似度，随后将其映射到低维空间并保留这个相似度信息。我们没有选择直接输入基因表达矩阵而是输入了相似度矩阵$S$。</p>
+<h3 id="利用习得相似性进行基因优先排序"><a href="#利用习得相似性进行基因优先排序" class="headerlink" title="利用习得相似性进行基因优先排序"></a>利用习得相似性进行基因优先排序</h3><p>通过计算某个基因在不同细胞中表达的值与习得的相似度的相关程度来对基因进行排序。给定相似度矩阵$S$和某个基因在所有细胞中的表达结果$f$，表达式如下：</p>
+<script type="math/tex; mode=display">\begin{equation}
+LS(f) = \frac{f^{'}Sf}{f^{'}f}
+\end{equation}</script><p>这是一个著名的用来衡量基因之间的一致性和相似性的无监督特征排序算法。拉普拉斯分数越高，则基因对细胞亚群的整体分化就越重要。然而，拉普拉斯分数对相似度矩阵中的噪声值非常敏感。为了克服这个问题，采用了下面这种方法。随机选取一定比例的细胞（如细胞总数的80%），随后根据相似性子集上的拉普拉斯分数来对基因进行排序。</p>
+<h1 id="SIMLR在大数据集应用"><a href="#SIMLR在大数据集应用" class="headerlink" title="SIMLR在大数据集应用"></a>SIMLR在大数据集应用</h1><p>这一部分介绍了如何优化以上的算法步骤而提高算法处理大规模数据的能力。我们小组在这一部分没有认真细看，以下是对论文这一部分的翻译。其关键思想是使用KNN相似度来近似完全成对相似度。第一步是使用最先进的最近邻搜索技术ANNOY来优化KNN图的索引。ANNOY算法认为，一个近邻点的近邻也可能是一个近邻点。在构建出KNN图后，算法只更新每个细胞所预先选定的前$k$个近邻点。因为得到的相似度矩阵是稀疏的，所以使用Spectra来对$L$进行求解。</p>
+<p>在得到相似度矩阵后，就可以进行细胞可视化和细胞聚类了。聚类时，从t-SNE框架中获得嵌入的过程的计算量很大，因此采用了一种谱聚类算法，它基本上等同于SIMLR算法中对矩阵$L$应用$k$均值。这种简单的算法对稀疏相似性的聚类非常有效，并可扩展到数以万计的细胞中。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/12/28/NAGFS-CODE-INTERPRETATION/" rel="prev" title="NAGFS示例代码解读">
+      <i class="fa fa-chevron-left"></i> NAGFS示例代码解读
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/" rel="next" title="NAGFS实验总结">
+      NAGFS实验总结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6"><span class="nav-number">2.</span> <span class="nav-text">算法框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SIMLR%E7%AE%97%E6%B3%95%E6%A0%B8%E5%87%BD%E6%95%B0%E6%9E%84%E9%80%A0"><span class="nav-number">3.</span> <span class="nav-text">SIMLR算法核函数构造</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%87%BD%E6%95%B0%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">3.0.1.</span> <span class="nav-text">核函数权重初始化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">优化算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%80%EF%BC%9A%E5%9B%BA%E5%AE%9A-L-%E5%92%8C-w-%E5%AF%B9-S-%E8%BF%9B%E8%A1%8C%E6%9B%B4%E6%96%B0%E3%80%82"><span class="nav-number">4.0.1.</span> <span class="nav-text">步骤一：固定$L$和$w$对$S$进行更新。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%BA%8C%EF%BC%9A%E5%9B%BA%E5%AE%9A-S-%E5%92%8C-w-%E5%AF%B9-L-%E8%BF%9B%E8%A1%8C%E6%9B%B4%E6%96%B0%E3%80%82"><span class="nav-number">4.0.2.</span> <span class="nav-text">步骤二：固定$S$和$w$对$L$进行更新。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%B8%89%EF%BC%9A%E5%9B%BA%E5%AE%9A-S-%E5%92%8C-L-%E5%AF%B9-w-%E8%BF%9B%E8%A1%8C%E6%9B%B4%E6%96%B0%E3%80%82"><span class="nav-number">4.0.3.</span> <span class="nav-text">步骤三：固定$S$和$L$对$w$进行更新。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E5%9B%9B%EF%BC%9A%E9%80%9A%E8%BF%87%E6%89%A9%E6%95%A3%E5%A2%9E%E5%BC%BA%E7%9B%B8%E4%BC%BC%E6%80%A7%E3%80%82"><span class="nav-number">4.0.4.</span> <span class="nav-text">步骤四：通过扩散增强相似性。</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8E%E7%BB%AD%E6%AD%A5%E9%AA%A4"><span class="nav-number">5.</span> <span class="nav-text">后续步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8SIMLR%E8%BF%9B%E8%A1%8C%E9%99%8D%E7%BB%B4"><span class="nav-number">5.0.1.</span> <span class="nav-text">用SIMLR进行降维</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E4%B9%A0%E5%BE%97%E7%9B%B8%E4%BC%BC%E6%80%A7%E8%BF%9B%E8%A1%8C%E5%9F%BA%E5%9B%A0%E4%BC%98%E5%85%88%E6%8E%92%E5%BA%8F"><span class="nav-number">5.0.2.</span> <span class="nav-text">利用习得相似性进行基因优先排序</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SIMLR%E5%9C%A8%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%9B%86%E5%BA%94%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">SIMLR在大数据集应用</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="树莓可乐"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">树莓可乐</p>
+  <div class="site-description" itemprop="description">认真但不沉重，坚定却仍然轻快</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">树莓可乐</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1df548ccd4ff51da626e',
+      clientSecret: 'f55ef8cc714f1f5c4189744a96597d7af58c45ec',
+      repo        : 'RaspberryCoke.github.io',
+      owner       : 'RaspberryCoke',
+      admin       : ['RaspberryCoke'],
+      id          : 'e9f9ae9ac059885f657c0f55a90fd3c9',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
