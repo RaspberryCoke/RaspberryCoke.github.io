@@ -22,7 +22,7 @@
 
   <meta name="description" content="本文是对NAGFS中提及的SIMLR算法的解读。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NAGFS(3)SIMLR论文解读">
+<meta property="og:title" content="NAGFS(3)SIMLR论文公式解读">
 <meta property="og:url" content="http://example.com/2024/01/10/SIMLR_INTRODUCTION/index.html">
 <meta property="og:site_name" content="RaspberryCoke">
 <meta property="og:description" content="本文是对NAGFS中提及的SIMLR算法的解读。">
@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://example.com/2024/01/10/SIMLR_INTRODUCTION/1.png">
 <meta property="og:image" content="http://example.com/2024/01/10/SIMLR_INTRODUCTION/2.png">
 <meta property="article:published_time" content="2024-01-10T07:24:39.000Z">
-<meta property="article:modified_time" content="2024-01-18T14:47:34.072Z">
+<meta property="article:modified_time" content="2024-01-19T05:14:27.643Z">
 <meta property="article:author" content="树莓可乐">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="机器学习">
@@ -50,7 +50,7 @@
   };
 </script>
 
-  <title>NAGFS(3)SIMLR论文解读 | RaspberryCoke</title>
+  <title>NAGFS(3)SIMLR论文公式解读 | RaspberryCoke</title>
   
 
 
@@ -172,7 +172,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          NAGFS(3)SIMLR论文解读
+          NAGFS(3)SIMLR论文公式解读
         </h1>
 
         <div class="post-meta">
@@ -189,7 +189,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-01-18 22:47:34" itemprop="dateModified" datetime="2024-01-18T22:47:34+08:00">2024-01-18</time>
+                <time title="修改时间：2024-01-19 13:14:27" itemprop="dateModified" datetime="2024-01-19T13:14:27+08:00">2024-01-19</time>
               </span>
 
           
@@ -212,9 +212,9 @@ alt="图1：SIMLR论文" />
 <h1 id="概述">概述</h1>
 <p>在我们本次实验中，我们采用了NAGFS方法进行疾病的诊断。NAGFS方法其中主要涉及到了两种算法：<strong>SIMLR和SNF算法</strong>。在本次实验中，我们花了很大的精力去研究SIMLR方法中的<strong>数学公式</strong>，学习到了很多机器学习相关的知识。本文是对我们学习的成果的简要总结。</p>
 <p>SIMLR算法的诞生，是为了解决从输入的单细胞RNA序列数据中学习细胞与细胞之间相似度矩阵的问题。而单细胞的RNA序列数据和我们在本次实验（NAGFS）中的数据都是高维稀疏特征数据，在数据特点上有相似性。该算法对大规模数据有良好的性能，同时又提高了聚类的效果。</p>
-<p>相较于传统的算法，SIMLR算法主要有以下优势： 1.
-它通过<strong>多个核函数</strong>的方法来学习一个最符合输入数据集的相似性矩阵。常规的聚类算法有时并不适用于特征维度过高的数据。同时，研究表明，使用多个核函数可以更好地描述数据的信息，并且<strong>相比于单个核函数，多个核函数具有更好的灵活性</strong>。</p>
-<ol start="2" type="1">
+<p>相较于传统的算法，SIMLR算法主要有以下优势：</p>
+<ol type="1">
+<li><p>它通过<strong>多个核函数</strong>的方法来学习一个最符合输入数据集的相似性矩阵。常规的聚类算法有时并不适用于特征维度过高的数据。同时，研究表明，使用多个核函数可以更好地描述数据的信息，并且<strong>相比于单个核函数，多个核函数具有更好的灵活性</strong>。</p></li>
 <li><p>SIMLR算法应用<strong>秩约束</strong>来增强相似度矩阵的分块对角结构，这样做可以提高对数据特征的捕捉能力。</p></li>
 <li><p>SIMLR算法还使用<strong>图扩散</strong>的方法，以提高对弱相似度的识别能力。</p></li>
 </ol>
@@ -241,6 +241,7 @@ class="math inline">\(w_{l}\)</span>代表核函数的权重，每个<span
 class="math inline">\(w_{l}\)</span>代表每个核的重要性。<span
 class="math inline">\(K_{l}\left( c_{i},c_{j}
 \right)\)</span>是细胞<em>i</em>与细胞<em>j</em>作为参数的函数。</p>
+<pre><code>    注：留心这里的K函数，它是用来衡量两个个体的相似性的。这个函数将在后面介绍。</code></pre>
 <p>算法依据如下损失函数来计算细胞与细胞之间的相似性：</p>
 <p><span
 class="math display">\[\begin{equation}\begin{aligned}\mathrm{minimize}-&amp;\sum_{i,j,l}w_lK_l(c_i,c_j)S_{ij}+\beta\parallel
@@ -248,7 +249,6 @@ S\|_F^2+\\\gamma&amp;\mathrm{tr}(L^T(I_N-S)L)+\rho\sum_lw_llogw_l\end{aligned}\e
 <p><span class="math display">\[\text{subject to
 }L^TL=I_C,\sum_\text{l}{ w _ l = 1 , w _ l \geq 0 , \sum _ j S _ { i j
 }=1,\text{and }S_{ij}\geq0}\]</span></p>
-<p>以上是公式2.</p>
 <p>其中<span class="math inline">\(I_{N}\)</span>和<span
 class="math inline">\(I_{C}\)</span>分别为<span
 class="math inline">\(N\)</span>×<span
@@ -277,6 +277,16 @@ class="math inline">\(L\)</span>矩阵的引入增强了<span
 class="math inline">\(S\)</span>的低秩结构，而矩阵<span
 class="math inline">\((I_{N} -
 S)\)</span>为拉普拉斯矩阵，在一个相似图中，每个节点代表一个细胞，边衡量节点间的相似性。第四项对核函数的权重进行约束，防止单核函数情况的出现。实践证明，这个正则化项提高了相似矩阵的表现。</p>
+<p>在公式(2)中，第二项 <span
+class="math inline">\(\beta\|S\|_F^2\)</span>是Frobenius范数的正则化项，它用于避免过拟合。</p>
+<p><strong>为什么正则项可以防止 <span class="math inline">\(S\)</span>
+过于接近一个单位矩阵?</strong></p>
+<p>正则项<span
+class="math inline">\(\beta\|S\|_F^2\)</span>的作用是惩罚<span
+class="math inline">\(S\)</span>中的大值。由于单位矩阵的对角线元素为1，如果没有正则化，优化过程可能会倾向于增加<span
+class="math inline">\(S\)</span>的对角线元素。加入正则项后，对角线元素的增加会带来正则项的显著增长(因为是取平方)，从而造成总的优化目标函数值的增加。因此，正则项可以防止<span
+class="math inline">\(S\)</span>中的对角线元素过大，进而避免<span
+class="math inline">\(S\)</span>过于接近单位矩阵。</p>
 <h1 id="simlr算法核函数构造">SIMLR算法核函数构造</h1>
 <p>由于高斯核相较于其他类型的核能够带来更好的性能，因此采用带有不同超参数的高斯核为基础构建不同的核函数。</p>
 <p><span class="math display">\[\begin{equation}
@@ -302,6 +312,15 @@ class="math inline">\((\sigma,k)\)</span>决定，设定<span
 class="math inline">\(k\)</span>=10，12，14,...,30 以及<span
 class="math inline">\(\sigma\)</span>
 =1.0，1.25，1.5，1.75，2，产生了55个不同的核函数。然而，实践证明，算法对核函数的数量以及参数的选择并不敏感。</p>
+<pre><code>    注：笔者认为这或许给改进算法提供了一种思路。</code></pre>
+<p>这里要注意的是：<span
+class="math inline">\(K\)</span>函数中的指数部分的分母是什么含义？也就是公式(4)(5)的含义是什么？</p>
+<p>为了方便理解，笔者把<span
+class="math inline">\(\varepsilon_{ij}\)</span>暂称之为自适应系数。对于公式(4)，其表达的含义是：这个细胞和其他细胞的平均距离，也就是这个细胞所处高维空间的稀疏程度。平均距离越大，意味着所处的空间越稀疏。<span
+class="math inline">\(\mu_i\)</span>可以控制<span
+class="math inline">\(\varepsilon_{ij}\)</span>，从而控制高斯核函数的分布。而高斯核函数的分布，会影响两个细胞相似度的计算。总结来说，这实质上是一种自适应调节机制。有助于在不同密度的数据区域中，更好地捕捉和反映出细胞之间的真实相似度。</p>
+<p>由于公式(3)的指数部分的分子是欧氏距离的平方，这个时候分母添加上自适应系数<span
+class="math inline">\(\varepsilon_{ij}\)</span>，排除两个样本各自所处的空间的稀疏度的影响，就是容易理解的了。</p>
 <h2 id="核函数权重初始化">核函数权重初始化</h2>
 <p>核函数的权重<span
 class="math inline">\(w\)</span>被初始化为核函数数量的倒数：</p>
@@ -384,7 +403,7 @@ LS(f) = \frac{f^{&#39;}Sf}{f^{&#39;}f}
 \end{equation}\]</span></p>
 <p>这是一个著名的用来衡量基因之间的一致性和相似性的无监督特征排序算法。拉普拉斯分数越高，则基因对细胞亚群的整体分化就越重要。然而，拉普拉斯分数对相似度矩阵中的噪声值非常敏感。为了克服这个问题，采用了下面这种方法。随机选取一定比例的细胞（如细胞总数的80%），随后根据相似性子集上的拉普拉斯分数来对基因进行排序。</p>
 <h1 id="simlr在大数据集应用">SIMLR在大数据集应用</h1>
-<p>这一部分介绍了如何优化以上的算法步骤而提高算法处理大规模数据的能力。我们小组在这一部分没有认真细看，以下是对论文这一部分的翻译。其关键思想是使用KNN相似度来近似完全成对相似度。第一步是使用最先进的最近邻搜索技术ANNOY来优化KNN图的索引。ANNOY算法认为，一个近邻点的近邻也可能是一个近邻点。在构建出KNN图后，算法只更新每个细胞所预先选定的前<span
+<p>这一部分介绍了如何优化以上的算法步骤而提高算法处理大规模数据的能力。我们小组在这一部分没有认真细看，以下是对论文这一部分的翻译。其关键思想是使用KNN相似度来近似完全成对相似度。第一步是使用最近邻搜索技术ANNOY来优化KNN图的索引。ANNOY算法认为，一个近邻点的近邻也可能是一个近邻点。在构建出KNN图后，算法只更新每个细胞所预先选定的前<span
 class="math inline">\(k\)</span>个近邻点。因为得到的相似度矩阵是稀疏的，所以使用Spectra来对<span
 class="math inline">\(L\)</span>进行求解。</p>
 <p>在得到相似度矩阵后，就可以进行细胞可视化和细胞聚类了。聚类时，从t-SNE框架中获得嵌入的过程的计算量很大，因此采用了一种谱聚类算法，它基本上等同于SIMLR算法中对矩阵<span
