@@ -224,60 +224,61 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文是卷积神经网络基础的笔记。<br><span id="more"></span></p>
+        <p>本文是卷积神经网络基础的笔记。 <span id="more"></span></p>
 <p><strong>第十课：卷积神经网络基础</strong></p>
-<pre><code>    由于本节比较基础，所以注解很少，仅留做复习使用。
-</code></pre><p><strong>初步认识</strong></p>
-<p>原图经过多次的下采样（特征提取器），之后全连接（分类器），经过空间变换最后输<br>出。</p>
+<pre><code>    由于本节比较基础，所以注解很少，仅留做复习使用。</code></pre>
+<p><strong>初步认识</strong></p>
+<p>原图经过多次的下采样（特征提取器），之后全连接（分类器），经过空间变换最后输
+出。</p>
 <p>卷积运算=特征提取。</p>
-<p><img src="image1.png" alt=""></p>
+<p><img src="image1.png" /></p>
 <p><strong>对图片的卷积的介绍</strong></p>
 <p>采用patch的方式，提取特征。</p>
-<p><img src="image2.png" alt=""> </p>
+<p><img src="image2.png" /></p>
 <p><strong>具体的卷积运算过程</strong></p>
 <p>数乘。</p>
-<p><img src="image3.png" alt=""> </p>
-<p><img src="image4.png" alt=""> </p>
+<p><img src="image3.png" /></p>
+<p><img src="image4.png" /></p>
 <p><strong>卷积的真实定义</strong></p>
 <p>要确保：每一个channel要单独有一个core，也就是每个通道都要有一个对应的卷积核。最后把所有的通道求和。</p>
-<p><img src="image5.png" alt=""> </p>
-<p><img src="image6.png" alt=""> </p>
-<p><img src="image7.png" alt=""></p>
+<p><img src="image5.png" /></p>
+<p><img src="image6.png" /></p>
+<p><img src="image7.png" /></p>
 <p><strong>类似的给出多个卷积核，进行多次进行卷积运算，从而控制生成channel数量</strong></p>
-<p><img src="image8.png" alt=""></p>
-<p><img src="image9.png" alt=""></p>
-<p><img src="image10.png" alt=""></p>
+<p><img src="image8.png" /></p>
+<p><img src="image9.png" /></p>
+<p><img src="image10.png" /></p>
 <p><strong>代码的简单介绍</strong></p>
-<p><img src="image11.png" alt=""> </p>
+<p><img src="image11.png" /></p>
 <p><strong>padding：输入mxm和输出mxm一样</strong></p>
-<p><img src="image12.png" alt=""></p>
+<p><img src="image12.png" /></p>
 <p>代码：</p>
-<p><img src="image13.png" alt=""></p>
+<p><img src="image13.png" /></p>
 <p><strong>stride：设置步长，用于跳跃</strong></p>
 <p>可以有效地降低output的h和w的值。</p>
-<p><img src="image14.png" alt=""></p>
+<p><img src="image14.png" /></p>
 <p><strong>下采样：常用最大池化</strong></p>
 <p><strong>最大池化，设置为2的时候，默认的strike也是2</strong></p>
 <p>分割成2*2，找最大值</p>
 <p>池化也可以设置padding和stride，可以使得输入输出的大小：w,h是一样的。</p>
-<p><img src="image15.png" alt=""></p>
+<p><img src="image15.png" /></p>
 <p>代码：</p>
-<p><img src="image16.png" alt=""></p>
+<p><img src="image16.png" /></p>
 <p><strong>一个卷积神经的例子</strong></p>
-<p><img src="image17.png" alt=""></p>
+<p><img src="image17.png" /></p>
 <p><strong>多分类的真实例子</strong></p>
-<p><img src="image18.png" alt=""></p>
+<p><img src="image18.png" /></p>
 <p>先进行卷积，之后进行激活，然后池化，之后再来一次，最后线性变化。</p>
 <p>代码：（代码写反了函数的顺序，但是没有影响）</p>
 <p>记住最后一层不做激活。</p>
-<p><img src="image19.png" alt=""></p>
+<p><img src="image19.png" /></p>
 <p><strong>使用GPU</strong></p>
 <p>迁移各种东西，模型和数据。但是要保证模型和数据在同一个地方，否则无法工作。</p>
-<p><img src="image20.png" alt=""></p>
-<p><img src="image21.png" alt=""></p>
-<p><img src="image22.png" alt=""></p>
+<p><img src="image20.png" /></p>
+<p><img src="image21.png" /></p>
+<p><img src="image22.png" /></p>
 <p><strong>作业</strong></p>
-<p><img src="image23.png" alt=""></p>
+<p><img src="image23.png" /></p>
 
     </div>
 
