@@ -20,25 +20,45 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="本文是对整个实验的总结。">
+  <meta name="description" content="本文是卷积神经网络基础的笔记。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NAGFS(4)实验总结">
-<meta property="og:url" content="http://example.com/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:title" content="卷积神经网络基础">
+<meta property="og:url" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="RaspberryCoke">
-<meta property="og:description" content="本文是对整个实验的总结。">
+<meta property="og:description" content="本文是卷积神经网络基础的笔记。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/1.png">
-<meta property="og:image" content="http://example.com/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/2.png">
-<meta property="og:image" content="http://example.com/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/3.png">
-<meta property="article:published_time" content="2024-01-13T12:10:13.000Z">
-<meta property="article:modified_time" content="2024-01-20T02:50:04.502Z">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image1.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image2.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image3.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image4.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image5.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image6.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image7.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image8.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image9.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image10.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image11.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image12.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image13.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image14.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image15.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image16.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image17.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image18.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image19.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image20.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image21.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image22.png">
+<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image23.png">
+<meta property="article:published_time" content="2023-03-25T06:16:13.000Z">
+<meta property="article:modified_time" content="2024-01-20T05:39:35.457Z">
 <meta property="article:author" content="树莓可乐">
 <meta property="article:tag" content="AI">
-<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/1.png">
+<meta name="twitter:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image1.png">
 
-<link rel="canonical" href="http://example.com/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/">
+<link rel="canonical" href="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/">
 
 
 <script id="page-configurations">
@@ -51,7 +71,7 @@
   };
 </script>
 
-  <title>NAGFS(4)实验总结 | RaspberryCoke</title>
+  <title>卷积神经网络基础 | RaspberryCoke</title>
   
 
 
@@ -160,7 +180,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -173,7 +193,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          NAGFS(4)实验总结
+          卷积神经网络基础
         </h1>
 
         <div class="post-meta">
@@ -183,14 +203,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2024-01-13 20:10:13" itemprop="dateCreated datePublished" datetime="2024-01-13T20:10:13+08:00">2024-01-13</time>
+              <time title="创建时间：2023-03-25 14:16:13" itemprop="dateCreated datePublished" datetime="2023-03-25T14:16:13+08:00">2023-03-25</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-01-20 10:50:04" itemprop="dateModified" datetime="2024-01-20T10:50:04+08:00">2024-01-20</time>
+                <time title="修改时间：2024-01-20 13:39:35" itemprop="dateModified" datetime="2024-01-20T13:39:35+08:00">2024-01-20</time>
               </span>
 
           
@@ -204,67 +224,61 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文是对整个实验的总结。 <span id="more"></span></p>
-<p>在我们本次实验中，我们采用了NAGFS方法进行疾病的诊断。NAGFS方法其中主要涉及到了两种算法：<strong>SIMLR和SNF算法</strong>。在本次实验中，我们花了很大的精力去研究SIMLR方法中的<strong>数学公式</strong>，同时也学习到了很多机器学习相关的知识。本文是对我们学习的成果的简要介绍。</p>
-<pre><code>    注：笔者在最后做了总结，如果对论文不感兴趣可以直接拉到最后。</code></pre>
-<h1 id="概述">概述</h1>
-<p>本文将从数据预处理、特征选择、分类以及可视化四个方面介绍该课题所用到的核心技术。</p>
-<p>首先，我们通过fMRI数据的时间序列计算Pearson相关系数，以获得脑区相关矩阵来描述大脑脑区的连接特征。</p>
-<p>然后我们通过SIMLR框架进行聚类。SILMR通过使用多个核函数，有效学习最适合数据集的样本间相似性度量。</p>
-<img src="1.png" />
-<center>
-图1：算法全览
-</center>
-<p>之后，利用SNF技术,通过局部扩散和全局融合过程，将输入网络非线性的整合成一个单一的网络，最后我们通过计算残差网络图谱，也就是两个网络图谱之间的绝对差值，选择差异最大的非零特征，并使用这些特征训练支持向量机分类器进行分类。</p>
-<p>采用上述方法，我们最终取得了较好的分类结果。在实际训练时，我们对选取特征的数量进行的多次试验，最好准确度达到了71.84%，并且通过BrainNet
-Viewer工具实现了大脑的可视化。</p>
-<h1 id="数据预处理">数据预处理</h1>
-<p>我们的原始数据是通过fMRI数据得到的时间序列，这个时间序列的维度是1035×n×116，我们通过时间序列计算每个脑区的Pearson相关系数。</p>
-<p>我们可以得到每个人的皮尔逊相关系数矩阵是116×116，一共有1035个人，116个脑区，每个人有6670个特征，通过提取上三角矩阵，我们总共可以提取到（116×115）/2个特征，即6670个特征。在时间序列的数据中存在很多零元素，因此导致了得到的皮尔逊相关系数矩阵中很多NAN值，为此，需要将皮尔逊相关稀疏矩阵中的NAN值全部修改为0。我们可以利用脑区相关矩阵来描述大脑脑区的连接特征，这样就得到了本次实验的输入数据。</p>
-<h1 id="特征选择">特征选择</h1>
-<h2 id="nagfs方法">NAGFS方法</h2>
-<p>NAGFS是一种脑网络图谱引导特征选择的方法。该方法通过学习功能性脑网络图谱来引导特征选择，从整体上提高了对脑网络连接的识别。NAGFS不仅提高了特征选择的性能，而且提升了对神经系统疾病分类的准确度。</p>
-<p>在本课题中，我们通过使用FMRI获得的数据，可以提取出不同脑功能区域的连通性特征。在实际应用中，由于数据的维度过高，为了方便分类，一般使用特征选择进行降维处理。这是因为特征提取会抹去原始数据的生物学含义。传统的特征选择面临着多种挑战。其一是泛化性和可重复性，传统方法在不同数据集之间的表现并不一致，为特定数据集选择最佳的特征选择方法是一件耗时且困难的事。其二是计算成本和可扩展性，传统的方法计算成本过高，而且当特征数量不断增大时，分类性能明显下降。通过使用NAGFS方法，我们可以避免上述问题。</p>
-<h2 id="simlr算法">SIMLR算法</h2>
-SIMLR算法是一个从输入的单细胞RNA序列数据中学习细胞与细胞之间相似度矩阵的框架。单细胞的RNA序列数据和我们在本次实验中的数据都是高维特征数据，使用该算法可以对大规模数据进行良好地处理，同时也极大程度上提高了聚类的效果。
-<img src="2.png" alt="图2：SIMLR算法" />
-<center>
-图2：SIMLR算法
-</center>
-<h2 id="snf相似网络融合">SNF相似网络融合</h2>
-<p>SNF是一种相似网络融合技术，该技术用于将多个相似性网络整合为一个更具代表性的网络，从而提升数据分析和模式识别的准确性和可靠性。
-SNF相似网络融合技术主要包括以下步骤： 1.
-构建相似性网络：从原始数据中计算出多个相关矩阵，每个矩阵表示一个相似性网络。相似性网络是一种图结构，其中的数据样本被表示为节点，边表示样本之间的相似性或者相关性。
-2.
-相似性网络归一化：对每一个相似性网络进行归一化处理，从而确保不同的网络之间的相似性矩阵具有相似的尺度，通过这种方法可以消除不同网络之间的度量差异。
-3.
-构建相似性整合矩阵：将归一化之后的相似性矩阵进行整合，从而得到一个融合的相似性矩阵，其中的整合方法可以是简单的加权平均、加权求和或者是其他更复杂的整合方法。
-4.
-构建融合网络：基于融合的相似性矩阵构建一个新的融合网络，在这个融合网络中，节点表示数据样本，边的权重表示样本之间的融合相似性。</p>
-<h1 id="分类">分类</h1>
-<p>本课题采用的SVM向量机进行分类。SVM分类的基本思想是将样本映射到高维特征空间，并在该空间中寻找一个最优的超平面，使得不同类别的样本能够被最大间隔分开。这种映射是通过核函数来实现的，核函数可以将低维特征空间中的样本映射到高维空间中，从而使得样本在高维空间中更容易分开。简言之，SVM就是一种二类分类模型，他的基本模型是定义在特征空间的间隔最大的线性分类器，SVM的学习策略就是间隔最大化。</p>
-<p>SVM是针对线性可分情景的广义线性回归模型，对于线性不可分的情况，我们需要非线性分类器，线性分类器无法解决这种特殊问题，解决方法就是通过“核技巧”将低维特征空间的线性不可分样本映射到高维空间中，实现对非线性样本进行线性分析，本课题就是通过SVM中的高斯核函数进行分类。</p>
-<h1 id="可视化">可视化</h1>
-在matlab中下载BrainNet
-Viewer工具包，将最后得到的数据进行转换，将所需的边文件、节点文件等导入工具中，将大脑疾病诊断表征权重可视化，从而实现该诊断系统的可视化。
-<img src="3.png" alt="图3：可视化结果" />
-<center>
-图3：可视化结果
-</center>
-<h1 id="总结">总结</h1>
-<p>在本次实验中，由于我们小组没有在本科阶段接受系统的机器学习教学，因此基础欠佳。我们花费了很长时间去学习机器学习的基础知识，了解了很多机器学习思想，掌握了多种机器学习算法。我们从数据预处理开始从头复现了一个项目，除了算法核心代码我们只做了逐行解读（代码过长，没有展现在本网站中），其余的代码均是独立完成。</p>
-<p>在我们阅读公式的过程中，我们遇到了很大的困难。其原因有很多：</p>
-<ol type="1">
-<li>这是我们第一次阅读论文，缺乏阅读论文的经验；</li>
-<li>我们这一届计算机科学专业对机器学习领域的教学较少；</li>
-<li>我们没有系统学过矩阵论、最优化等理论；</li>
-<li>时间紧张，我们只用了<strong>不到七天</strong>的时间完成了整个项目并结束<strong>答辩</strong>，随后又花费七天完善了项目，并且完成了医学诊疗系统软件。</li>
-</ol>
-<p>尽管我们曾面临诸多挑战，但也因此积累了丰富的经验,获得了满满的成就感。</p>
-<p>在项目的完成过程中，笔者对机器学习和深入阅读论文产生了浓厚的兴趣。尽管之前曾自学深度学习，但从未深入研究复杂的数学公式或专业领域的论文。这次的尝试让笔者感到仿佛在解一个精彩的谜题，每当遇到难题时，思绪万千，各种猜测。然后通过查阅资料逐渐修正自己的理解。最终总会有那一刻，一切都豁然开朗。这种经历真是人生中的一大乐事。</p>
-<p>另一个宝贵的收获是通过团队协作完成任务，笔者深刻体会到了团队合作的力量。一起研读论文，不仅使原本枯燥的过程变得更加愉快，还加强了我们之间的联系与理解。</p>
-<p>第三个收获是笔者领悟到了“通过项目学习”的强大威力，这将对笔者的未来学习提供宝贵的指导和思路。</p>
-<p>最后，笔者由衷感谢学校为我们提供了这个难得的机会，让我们共同探讨前沿课题，完成了这次充满趣味的任务。</p>
+        <p>本文是卷积神经网络基础的笔记。 <span id="more"></span></p>
+<p><strong>第十课：卷积神经网络基础</strong></p>
+<pre><code>    由于本节比较基础，所以注解很少，仅留做复习使用。</code></pre>
+<p><strong>初步认识</strong></p>
+<p>原图经过多次的下采样（特征提取器），之后全连接（分类器），经过空间变换最后输
+出。</p>
+<p>卷积运算=特征提取。</p>
+<p><img src="image1.png" /></p>
+<p><strong>对图片的卷积的介绍</strong></p>
+<p>采用patch的方式，提取特征。</p>
+<p><img src="image2.png" /></p>
+<p><strong>具体的卷积运算过程</strong></p>
+<p>数乘。</p>
+<p><img src="image3.png" /></p>
+<p><img src="image4.png" /></p>
+<p><strong>卷积的真实定义</strong></p>
+<p>要确保：每一个channel要单独有一个core，也就是每个通道都要有一个对应的卷积核。最后把所有的通道求和。</p>
+<p><img src="image5.png" /></p>
+<p><img src="image6.png" /></p>
+<p><img src="image7.png" /></p>
+<p><strong>类似的给出多个卷积核，进行多次进行卷积运算，从而控制生成channel数量</strong></p>
+<p><img src="image8.png" /></p>
+<p><img src="image9.png" /></p>
+<p><img src="image10.png" /></p>
+<p><strong>代码的简单介绍</strong></p>
+<p><img src="image11.png" /></p>
+<p><strong>padding：输入mxm和输出mxm一样</strong></p>
+<p><img src="image12.png" /></p>
+<p>代码：</p>
+<p><img src="image13.png" /></p>
+<p><strong>stride：设置步长，用于跳跃</strong></p>
+<p>可以有效地降低output的h和w的值。</p>
+<p><img src="image14.png" /></p>
+<p><strong>下采样：常用最大池化</strong></p>
+<p><strong>最大池化，设置为2的时候，默认的strike也是2</strong></p>
+<p>分割成2*2，找最大值</p>
+<p>池化也可以设置padding和stride，可以使得输入输出的大小：w,h是一样的。</p>
+<p><img src="image15.png" /></p>
+<p>代码：</p>
+<p><img src="image16.png" /></p>
+<p><strong>一个卷积神经的例子</strong></p>
+<p><img src="image17.png" /></p>
+<p><strong>多分类的真实例子</strong></p>
+<p><img src="image18.png" /></p>
+<p>先进行卷积，之后进行激活，然后池化，之后再来一次，最后线性变化。</p>
+<p>代码：（代码写反了函数的顺序，但是没有影响）</p>
+<p>记住最后一层不做激活。</p>
+<p><img src="image19.png" /></p>
+<p><strong>使用GPU</strong></p>
+<p>迁移各种东西，模型和数据。但是要保证模型和数据在同一个地方，否则无法工作。</p>
+<p><img src="image20.png" /></p>
+<p><img src="image21.png" /></p>
+<p><img src="image22.png" /></p>
+<p><strong>作业</strong></p>
+<p><img src="image23.png" /></p>
 
     </div>
 
@@ -275,7 +289,7 @@ Viewer工具包，将最后得到的数据进行转换，将所需的边文件�
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/AI/" rel="tag"># AI</a>
-              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
           </div>
 
         
@@ -283,11 +297,11 @@ Viewer工具包，将最后得到的数据进行转换，将所需的边文件�
 
         
     <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2024/01/10/SIMLR_INTRODUCTION/" rel="prev" title="NAGFS(3)SIMLR论文公式解读">
-      <i class="fa fa-chevron-left"></i> NAGFS(3)SIMLR论文公式解读
-    </a></div>
       <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2023/12/28/NAGFS%E4%BB%A3%E7%A0%81readme%E8%A7%A3%E8%AF%BB/" rel="next" title="NAGFS(1)readme解读">
+      NAGFS(1)readme解读 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -347,7 +361,6 @@ Viewer工具包，将最后得到的数据进行转换，将所需的边文件�
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">数据预处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9"><span class="nav-number">3.</span> <span class="nav-text">特征选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#nagfs%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">NAGFS方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#simlr%E7%AE%97%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">SIMLR算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#snf%E7%9B%B8%E4%BC%BC%E7%BD%91%E7%BB%9C%E8%9E%8D%E5%90%88"><span class="nav-number">3.3.</span> <span class="nav-text">SNF相似网络融合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%B1%BB"><span class="nav-number">4.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">可视化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -524,7 +537,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'RaspberryCoke.github.io',
       owner       : 'RaspberryCoke',
       admin       : ['RaspberryCoke'],
-      id          : '57f0152f74b7520ffa3e871d9f395e0a',
+      id          : 'c088950c970333a73c819f0f666db292',
         language: 'zh-CN',
       distractionFreeMode: true
     });
