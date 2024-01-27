@@ -20,45 +20,24 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="本文是卷积神经网络基础的笔记。">
+  <meta name="description" content="在语义分割领域，UNet是一种流行的架构。本文将介绍UNet的基本特点与网络结构。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="卷积神经网络基础">
-<meta property="og:url" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:title" content="从零实现UNet（简介）">
+<meta property="og:url" content="http://example.com/2024/01/22/%E4%BB%8E%E9%9B%B6%E5%AE%9E%E7%8E%B0UNet%EF%BC%88%E7%AE%80%E4%BB%8B%EF%BC%89/index.html">
 <meta property="og:site_name" content="RaspberryCoke">
-<meta property="og:description" content="本文是卷积神经网络基础的笔记。">
+<meta property="og:description" content="在语义分割领域，UNet是一种流行的架构。本文将介绍UNet的基本特点与网络结构。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image1.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image2.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image3.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image4.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image5.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image6.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image7.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image8.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image9.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image10.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image11.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image12.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image13.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image14.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image15.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image16.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image17.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image18.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image19.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image20.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image21.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image22.png">
-<meta property="og:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image23.png">
-<meta property="article:published_time" content="2023-03-25T06:16:13.000Z">
-<meta property="article:modified_time" content="2024-01-20T05:39:35.457Z">
+<meta property="og:image" content="http://example.com/2024/01/22/%E4%BB%8E%E9%9B%B6%E5%AE%9E%E7%8E%B0UNet%EF%BC%88%E7%AE%80%E4%BB%8B%EF%BC%89/UNet.png">
+<meta property="og:image" content="http://example.com/2024/01/22/%E4%BB%8E%E9%9B%B6%E5%AE%9E%E7%8E%B0UNet%EF%BC%88%E7%AE%80%E4%BB%8B%EF%BC%89/MDUNet.png">
+<meta property="article:published_time" content="2024-01-22T11:31:12.000Z">
+<meta property="article:modified_time" content="2024-01-27T11:36:42.095Z">
 <meta property="article:author" content="树莓可乐">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/image1.png">
+<meta name="twitter:image" content="http://example.com/2024/01/22/%E4%BB%8E%E9%9B%B6%E5%AE%9E%E7%8E%B0UNet%EF%BC%88%E7%AE%80%E4%BB%8B%EF%BC%89/UNet.png">
 
-<link rel="canonical" href="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/">
+<link rel="canonical" href="http://example.com/2024/01/22/%E4%BB%8E%E9%9B%B6%E5%AE%9E%E7%8E%B0UNet%EF%BC%88%E7%AE%80%E4%BB%8B%EF%BC%89/">
 
 
 <script id="page-configurations">
@@ -71,7 +50,7 @@
   };
 </script>
 
-  <title>卷积神经网络基础 | RaspberryCoke</title>
+  <title>从零实现UNet（简介） | RaspberryCoke</title>
   
 
 
@@ -180,7 +159,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/22/%E4%BB%8E%E9%9B%B6%E5%AE%9E%E7%8E%B0UNet%EF%BC%88%E7%AE%80%E4%BB%8B%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -193,7 +172,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          卷积神经网络基础
+          从零实现UNet（简介）
         </h1>
 
         <div class="post-meta">
@@ -203,14 +182,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-03-25 14:16:13" itemprop="dateCreated datePublished" datetime="2023-03-25T14:16:13+08:00">2023-03-25</time>
+              <time title="创建时间：2024-01-22 19:31:12" itemprop="dateCreated datePublished" datetime="2024-01-22T19:31:12+08:00">2024-01-22</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-01-20 13:39:35" itemprop="dateModified" datetime="2024-01-20T13:39:35+08:00">2024-01-20</time>
+                <time title="修改时间：2024-01-27 19:36:42" itemprop="dateModified" datetime="2024-01-27T19:36:42+08:00">2024-01-27</time>
               </span>
 
           
@@ -224,61 +203,46 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文是卷积神经网络基础的笔记。 <span id="more"></span></p>
-<p><strong>第十课：卷积神经网络基础</strong></p>
-<pre><code>    由于本节比较基础，所以注解很少，仅留做复习使用。</code></pre>
-<p><strong>初步认识</strong></p>
-<p>原图经过多次的下采样（特征提取器），之后全连接（分类器），经过空间变换最后输
-出。</p>
-<p>卷积运算=特征提取。</p>
-<p><img src="image1.png" /></p>
-<p><strong>对图片的卷积的介绍</strong></p>
-<p>采用patch的方式，提取特征。</p>
-<p><img src="image2.png" /></p>
-<p><strong>具体的卷积运算过程</strong></p>
-<p>数乘。</p>
-<p><img src="image3.png" /></p>
-<p><img src="image4.png" /></p>
-<p><strong>卷积的真实定义</strong></p>
-<p>要确保：每一个channel要单独有一个core，也就是每个通道都要有一个对应的卷积核。最后把所有的通道求和。</p>
-<p><img src="image5.png" /></p>
-<p><img src="image6.png" /></p>
-<p><img src="image7.png" /></p>
-<p><strong>类似的给出多个卷积核，进行多次进行卷积运算，从而控制生成channel数量</strong></p>
-<p><img src="image8.png" /></p>
-<p><img src="image9.png" /></p>
-<p><img src="image10.png" /></p>
-<p><strong>代码的简单介绍</strong></p>
-<p><img src="image11.png" /></p>
-<p><strong>padding：输入mxm和输出mxm一样</strong></p>
-<p><img src="image12.png" /></p>
-<p>代码：</p>
-<p><img src="image13.png" /></p>
-<p><strong>stride：设置步长，用于跳跃</strong></p>
-<p>可以有效地降低output的h和w的值。</p>
-<p><img src="image14.png" /></p>
-<p><strong>下采样：常用最大池化</strong></p>
-<p><strong>最大池化，设置为2的时候，默认的strike也是2</strong></p>
-<p>分割成2*2，找最大值</p>
-<p>池化也可以设置padding和stride，可以使得输入输出的大小：w,h是一样的。</p>
-<p><img src="image15.png" /></p>
-<p>代码：</p>
-<p><img src="image16.png" /></p>
-<p><strong>一个卷积神经的例子</strong></p>
-<p><img src="image17.png" /></p>
-<p><strong>多分类的真实例子</strong></p>
-<p><img src="image18.png" /></p>
-<p>先进行卷积，之后进行激活，然后池化，之后再来一次，最后线性变化。</p>
-<p>代码：（代码写反了函数的顺序，但是没有影响）</p>
-<p>记住最后一层不做激活。</p>
-<p><img src="image19.png" /></p>
-<p><strong>使用GPU</strong></p>
-<p>迁移各种东西，模型和数据。但是要保证模型和数据在同一个地方，否则无法工作。</p>
-<p><img src="image20.png" /></p>
-<p><img src="image21.png" /></p>
-<p><img src="image22.png" /></p>
-<p><strong>作业</strong></p>
-<p><img src="image23.png" /></p>
+        <p>在语义分割领域，UNet是一种流行的架构。本文将介绍UNet的基本特点与网络结构。
+<span id="more"></span></p>
+<h1 id="概述">概述</h1>
+<p>UNet是一种流行的卷积神经网络（CNN）架构，最初是为了解决生物医学图像分割问题而设计的。自2015年首次提出以来，UNet因其卓越的性能和高效的结构而在医学图像处理领域广受欢迎。本文是对UNet原理的简要介绍。在下一篇文章中将介绍从零实现UNet。</p>
+<h1 id="unet架构的特点">UNet架构的特点</h1>
+<ol type="1">
+<li><p>对称结构：UNet的架构呈“U”形，由两部分组成：收缩路径（<strong>编码器</strong>）和扩展路径（<strong>解码器</strong>）。</p></li>
+<li><p>收缩路径：通过一系列卷积层和最大池化层逐渐降低特征图的空间维度，从而捕获图像内容。</p></li>
+<li><p>扩展路径：通过上采样和卷积层逐步恢复特征图的空间维度，同时保留重要的位置信息。</p></li>
+<li><p>跳跃连接：UNet的一个关键特点是跳跃连接（Skip
+Connections）。它们将收缩路径中的特征图与扩展路径中的对应层相连。这种设计有助于在上采样过程中恢复精细的细节，改善了网络在图像分割任务中的性能。</p></li>
+<li><p>精确的定位：由于跳跃连接的作用，UNet能够有效结合高级特征（从收缩路径）和位置信息（从扩展路径），在保持上下文信息的同时实现精确的定位。</p></li>
+</ol>
+<h1 id="unet的网络结构">UNet的网络结构</h1>
+<p><img src="UNet.png" /> 以上是U-Net网络架构图，具体如下： 1.
+输入层：输入层接收固定大小的图像（例如572x572像素）。</p>
+<ol start="2" type="1">
+<li>收缩（编码）路径：由多个重复的模块组成，每个模块包括两个3x3的卷积（未填充），每个卷积后跟一个ReLU激活函数。
+每次连续的卷积之后，进行2x2的最大池化操作以减小特征图的维度，并将特征通道数加倍。</li>
+<li>底部层：在收缩路径的末端，模型通过两个3x3卷积（未填充）和ReLU激活，紧接着一个2x2的上采样操作来扩展特征图。</li>
+<li>扩展（解码）路径：类似于收缩路径但操作顺序相反。使用2x2的上采样操作，将特征图的维度逐渐恢复。
+每次上采样后，将得到的特征图与收缩路径中对应层级的特征图（通过跳跃连接）结合。
+结合后的特征图经过两个3x3卷积和ReLU激活处理。</li>
+<li>输出层：最后，通过一个1x1的卷积将特征通道映射到所需的类别数，得到最终的分割图。
+具体代码实现将在下一篇文章中介绍。 # UNet的模型改进
+为了充分提取有效特征，加强不同语义信息间的融合，或解决<strong>梯度消失</strong>、<strong>过拟合</strong>等问题，许多研究者在UNet网络模型的基础上进行了诸多尝试和改进，包括结构上的改进以及预处理、训练等阶段的非结构改进，在一定程度上提高了网络的精度和准确率，进一步提高了网络的分割性能。</li>
+</ol>
+<p>UNet网络模型结构主要包括编码器、解码器和跳跃连接部分。编码器用于提取抽象特征和上下文信息，解码器用于将图像逐步恢复至原始尺寸，而跳跃连接则将不同层次的特征进行融合。不同的结构部分具有其特有的功能和作用。因此，对网络结构进行改进能够最直接地影响网络的性能，这也是目前普遍使用的改进措施。</p>
+<p>UNet模型在结构上的改进主要包括编/解码器、跳跃连接以及整体结构的改进。大部分改进工作是在原有模块的基础上，增加<strong>残差模块、Dense
+模块、Inception 模块、Attention
+模块</strong>等经典网络模块，或综合运用其中的几种模块，以提高网络的分割性能。<strong>残差模块和
+Dense
+模块</strong>的基本思想是一致的，即：将浅层的输出结果跨层输入到深层网络中，以增强特征融合，加快网络的收敛速度，同时避免梯度消失与爆炸。</p>
+<p>有学者在UNet的基础上引入Dense
+模块形成了新的网络架构MDUNet。该网络通过三种不同的密集连接，将不同尺度的特征进行融合，从而加强了特征在当前层的传播
+，同时减少了单一密集连接造成的过拟合。 <img src="MDUNet.png" /></p>
+<p>Inception模块通过使用不同尺度的卷积核进行多尺度特征学习来提高分割精度，同时使用
+1×1卷积改变特征维度，以大大减少参数量。在原Inception模块的基础上，将5×5和7×7大小的卷积核分别因式分解为2个3×3卷积核和3个3×3卷积核，然后将三种卷积核的输出拼接在一起，可以获得不同尺度的空间信息。Inception模块的使用使得网络在保证感受野的前提下，减少了参数量，进而降低了内存需求
+。</p>
+<p>Attention模块通过给特征分配权重（即注意系数），进而有重点地提取有效特征，抑制无关特征。</p>
 
     </div>
 
@@ -297,10 +261,13 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2023/12/28/NAGFS%E4%BB%A3%E7%A0%81readme%E8%A7%A3%E8%AF%BB/" rel="next" title="NAGFS(1)readme解读">
-      NAGFS(1)readme解读 <i class="fa fa-chevron-right"></i>
+    <a href="/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/" rel="prev" title="NAGFS(4)实验总结">
+      <i class="fa fa-chevron-left"></i> NAGFS(4)实验总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/01/23/%E4%BB%8E%E9%9B%B6%E5%AE%9E%E7%8E%B0UNet%EF%BC%88%E4%BB%A3%E7%A0%81%EF%BC%89/" rel="next" title="从零实现UNet（代码）">
+      从零实现UNet（代码） <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -361,6 +328,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#unet%E6%9E%B6%E6%9E%84%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">UNet架构的特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#unet%E7%9A%84%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">UNet的网络结构</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -537,7 +505,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'RaspberryCoke.github.io',
       owner       : 'RaspberryCoke',
       admin       : ['RaspberryCoke'],
-      id          : 'c088950c970333a73c819f0f666db292',
+      id          : 'a8df29f7095a1c7880da94bbe514d285',
         language: 'zh-CN',
       distractionFreeMode: true
     });
