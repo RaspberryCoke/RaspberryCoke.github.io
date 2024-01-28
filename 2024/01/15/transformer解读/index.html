@@ -20,18 +20,30 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="认真但不沉重，坚定却仍然轻快">
-<meta property="og:type" content="website">
-<meta property="og:title" content="RaspberryCoke">
-<meta property="og:url" content="http://example.com/archives/2023/03/index.html">
+  <meta name="description" content="本文简要介绍了transformer架构。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="transformer解读">
+<meta property="og:url" content="http://example.com/2024/01/15/transformer%E8%A7%A3%E8%AF%BB/index.html">
 <meta property="og:site_name" content="RaspberryCoke">
-<meta property="og:description" content="认真但不沉重，坚定却仍然轻快">
+<meta property="og:description" content="本文简要介绍了transformer架构。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2024/01/15/transformer%E8%A7%A3%E8%AF%BB/a.png">
+<meta property="og:image" content="http://example.com/2024/01/15/transformer%E8%A7%A3%E8%AF%BB/b.png">
+<meta property="og:image" content="http://example.com/2024/01/15/transformer%E8%A7%A3%E8%AF%BB/c.png">
+<meta property="og:image" content="http://example.com/2024/01/15/transformer%E8%A7%A3%E8%AF%BB/d.png">
+<meta property="og:image" content="http://example.com/2024/01/15/transformer%E8%A7%A3%E8%AF%BB/e.png">
+<meta property="og:image" content="http://example.com/2024/01/15/transformer%E8%A7%A3%E8%AF%BB/f.png">
+<meta property="og:image" content="http://example.com/2024/01/15/transformer%E8%A7%A3%E8%AF%BB/g.png">
+<meta property="og:image" content="http://example.com/2024/01/15/transformer%E8%A7%A3%E8%AF%BB/h.png">
+<meta property="article:published_time" content="2024-01-15T12:10:13.000Z">
+<meta property="article:modified_time" content="2024-01-27T11:31:12.000Z">
 <meta property="article:author" content="树莓可乐">
-<meta property="article:tag" content="python,cpp,java,flutter,AI,人工智能,深度学习">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/01/15/transformer%E8%A7%A3%E8%AF%BB/a.png">
 
-<link rel="canonical" href="http://example.com/archives/2023/03/">
+<link rel="canonical" href="http://example.com/2024/01/15/transformer%E8%A7%A3%E8%AF%BB/">
 
 
 <script id="page-configurations">
@@ -39,12 +51,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | RaspberryCoke</title>
+  <title>transformer解读 | RaspberryCoke</title>
   
 
 
@@ -146,56 +158,114 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 9 篇日志。 继续努力。</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/15/transformer%E8%A7%A3%E8%AF%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="树莓可乐">
+      <meta itemprop="description" content="认真但不沉重，坚定却仍然轻快">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RaspberryCoke">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          transformer解读
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-01-15 20:10:13" itemprop="dateCreated datePublished" datetime="2024-01-15T20:10:13+08:00">2024-01-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-01-27 19:31:12" itemprop="dateModified" datetime="2024-01-27T19:31:12+08:00">2024-01-27</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2023</span>
+        <p>本文简要介绍了transformer架构。 <span id="more"></span></p>
+<p><img src="a.png" />
+Transformer是纯基于自注意力的模型。模型必须要进行位置编码，因为在注意力计算时并不能直接获得位置信息，所以采用这种方式保留位置信息。</p>
+<p><img src="b.png" /></p>
+<p>类似于CNN的多个核的学习，可以采用相同的办法，设置多头注意力机制。这样可以从各种角度获取信息。</p>
+<p><img src="c.png" /></p>
+<p>以上是多头注意力的数学表达。其中的W均是可以学习的。一般而言，经过FC层之后，可能会降维的，也就意味着第二行的p和d可能是不同的，会从原来的d维度变成p维度。然后交给第三行中的f函数。获得的输出h是当前的注意力输出。把所有的h汇集在一起，随后定义了一个可学习参数W0获得最终的输出。</p>
+<p><img src="d.png" /></p>
+<p>当进行解码的时候，不应该考虑该元素后面的元素，所以应该假设后面的全部看不见。</p>
+<p><img src="e.png" />
+考虑到这里使用了线性层，这里需要先把三个维度变成了二维。随后变回来。</p>
+<p><img src="f.png" /></p>
+<p>这里应该选择Layer Norm。考虑到预测时序列长度会变，选择Batch
+Norm选择特征做一个切片，会出现不稳定的情况。</p>
+<p><img src="g.png" /></p>
+<p>信息会从编码部分传递到解码部分。这个传播过程中，信息从编码部分的输出传递到了解码部分的中间的多头注意力部分，充当key与value。</p>
+<p><img src="h.png" /></p>
+<p>在预测的时候，第t+1个输出是由第t个值作为query得到的。</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-03-25T14:16:13+08:00"
-              content="2023-03-25">
-          03-25
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/03/25/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" itemprop="url">
-            <span itemprop="name">卷积神经网络基础</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/" rel="prev" title="NAGFS(4)实验总结">
+      <i class="fa fa-chevron-left"></i> NAGFS(4)实验总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/01/22/%E4%BB%8E%E9%9B%B6%E5%AE%9E%E7%8E%B0UNet%EF%BC%88%E7%AE%80%E4%BB%8B%EF%BC%89/" rel="next" title="从零实现UNet（简介）">
+      从零实现UNet（简介） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
   </article>
-
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -407,6 +477,25 @@
 
   
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1df548ccd4ff51da626e',
+      clientSecret: 'f55ef8cc714f1f5c4189744a96597d7af58c45ec',
+      repo        : 'RaspberryCoke.github.io',
+      owner       : 'RaspberryCoke',
+      admin       : ['RaspberryCoke'],
+      id          : 'b86a8126cd400265a2845662b7e06f78',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>
