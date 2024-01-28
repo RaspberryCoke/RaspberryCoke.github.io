@@ -203,32 +203,46 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>在语义分割领域，UNet是一种流行的架构。本文介绍UNet的基本特点与网络结构。<br><span id="more"></span></p>
-<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>UNet是一种流行的卷积神经网络（CNN）架构，最初是为了解决生物医学图像分割问题而设计的。自2015年首次提出以来，UNet因其卓越的性能和高效的结构而在医学图像处理领域广受欢迎。本文是对UNet原理的简要介绍。在下一篇文章中将介绍从零实现UNet。</p>
-<h1 id="UNet架构的特点"><a href="#UNet架构的特点" class="headerlink" title="UNet架构的特点"></a>UNet架构的特点</h1><ol>
-<li><p>对称结构：UNet的架构呈“U”形，由两部分组成：收缩路径（<strong>编码器</strong>）和扩展路径（<strong>解码器</strong>）。</p>
-</li>
-<li><p>收缩路径：通过一系列卷积层和最大池化层逐渐降低特征图的空间维度，从而捕获图像内容。</p>
-</li>
-<li>扩展路径：通过上采样和卷积层逐步恢复特征图的空间维度，同时保留重要的位置信息。</li>
-<li>跳跃连接：UNet的一个关键特点是跳跃连接（Skip Connections）。它们将收缩路径中的特征图与扩展路径中的对应层相连。这种设计有助于在上采样过程中恢复精细的细节，改善了网络在图像分割任务中的性能。</li>
-<li>精确的定位：由于跳跃连接的作用，UNet能够有效结合高级特征（从收缩路径）和位置信息（从扩展路径），在保持上下文信息的同时实现精确的定位。</li>
+        <p>在语义分割领域，UNet是一种流行的架构。本文介绍UNet的基本特点与网络结构。
+<span id="more"></span></p>
+<h1 id="概述">概述</h1>
+<p>UNet是一种流行的卷积神经网络（CNN）架构，最初是为了解决生物医学图像分割问题而设计的。自2015年首次提出以来，UNet因其卓越的性能和高效的结构而在医学图像处理领域广受欢迎。本文是对UNet原理的简要介绍。在下一篇文章中将介绍从零实现UNet。</p>
+<h1 id="unet架构的特点">UNet架构的特点</h1>
+<ol type="1">
+<li><p>对称结构：UNet的架构呈“U”形，由两部分组成：收缩路径（<strong>编码器</strong>）和扩展路径（<strong>解码器</strong>）。</p></li>
+<li><p>收缩路径：通过一系列卷积层和最大池化层逐渐降低特征图的空间维度，从而捕获图像内容。</p></li>
+<li><p>扩展路径：通过上采样和卷积层逐步恢复特征图的空间维度，同时保留重要的位置信息。</p></li>
+<li><p>跳跃连接：UNet的一个关键特点是跳跃连接（Skip
+Connections）。它们将收缩路径中的特征图与扩展路径中的对应层相连。这种设计有助于在上采样过程中恢复精细的细节，改善了网络在图像分割任务中的性能。</p></li>
+<li><p>精确的定位：由于跳跃连接的作用，UNet能够有效结合高级特征（从收缩路径）和位置信息（从扩展路径），在保持上下文信息的同时实现精确的定位。</p></li>
 </ol>
-<h1 id="UNet的网络结构"><a href="#UNet的网络结构" class="headerlink" title="UNet的网络结构"></a>UNet的网络结构</h1><p><img src="UNet.png" alt=""><br>以上是U-Net网络架构图，具体如下：</p>
-<ol>
-<li><p>输入层：输入层接收固定大小的图像（例如572x572像素）。</p>
-</li>
-<li><p>收缩（编码）路径：由多个重复的模块组成，每个模块包括两个3x3的卷积（未填充），每个卷积后跟一个ReLU激活函数。<br>每次连续的卷积之后，进行2x2的最大池化操作以减小特征图的维度，并将特征通道数加倍。</p>
-</li>
-<li>底部层：在收缩路径的末端，模型通过两个3x3卷积（未填充）和ReLU激活，紧接着一个2x2的上采样操作来扩展特征图。</li>
-<li>扩展（解码）路径：类似于收缩路径但操作顺序相反。使用2x2的上采样操作，将特征图的维度逐渐恢复。<br>每次上采样后，将得到的特征图与收缩路径中对应层级的特征图（通过跳跃连接）结合。<br>结合后的特征图经过两个3x3卷积和ReLU激活处理。</li>
-<li>输出层：最后，通过一个1x1的卷积将特征通道映射到所需的类别数，得到最终的分割图。<br>具体代码实现将在下一篇文章中介绍。</li>
+<h1 id="unet的网络结构">UNet的网络结构</h1>
+<p><img src="UNet.png" /> 以上是U-Net网络架构图，具体如下：</p>
+<ol type="1">
+<li><p>输入层：输入层接收固定大小的图像（例如572x572像素）。</p></li>
+<li><p>收缩（编码）路径：由多个重复的模块组成，每个模块包括两个3x3的卷积（未填充），每个卷积后跟一个ReLU激活函数。
+每次连续的卷积之后，进行2x2的最大池化操作以减小特征图的维度，并将特征通道数加倍。</p></li>
+<li><p>底部层：在收缩路径的末端，模型通过两个3x3卷积（未填充）和ReLU激活，紧接着一个2x2的上采样操作来扩展特征图。</p></li>
+<li><p>扩展（解码）路径：类似于收缩路径但操作顺序相反。使用2x2的上采样操作，将特征图的维度逐渐恢复。
+每次上采样后，将得到的特征图与收缩路径中对应层级的特征图（通过跳跃连接）结合。
+结合后的特征图经过两个3x3卷积和ReLU激活处理。</p></li>
+<li><p>输出层：最后，通过一个1x1的卷积将特征通道映射到所需的类别数，得到最终的分割图。
+具体代码实现将在下一篇文章中介绍。</p></li>
 </ol>
-<h1 id="UNet的模型改进"><a href="#UNet的模型改进" class="headerlink" title="UNet的模型改进"></a>UNet的模型改进</h1><p>为了充分提取有效特征，加强不同语义信息间的融合，或解决<strong>梯度消失</strong>、<strong>过拟合</strong>等问题，许多研究者在UNet网络模型的基础上进行了诸多尝试和改进，包括结构上的改进以及预处理、训练等阶段的非结构改进，在一定程度上提高了网络的精度和准确率，进一步提高了网络的分割性能。</p>
+<h1 id="unet的模型改进">UNet的模型改进</h1>
+<p>为了充分提取有效特征，加强不同语义信息间的融合，或解决<strong>梯度消失</strong>、<strong>过拟合</strong>等问题，许多研究者在UNet网络模型的基础上进行了诸多尝试和改进，包括结构上的改进以及预处理、训练等阶段的非结构改进，在一定程度上提高了网络的精度和准确率，进一步提高了网络的分割性能。</p>
 <p>UNet网络模型结构主要包括编码器、解码器和跳跃连接部分。编码器用于提取抽象特征和上下文信息，解码器用于将图像逐步恢复至原始尺寸，而跳跃连接则将不同层次的特征进行融合。不同的结构部分具有其特有的功能和作用。因此，对网络结构进行改进能够最直接地影响网络的性能，这也是目前普遍使用的改进措施。</p>
-<p>UNet模型在结构上的改进主要包括编/解码器、跳跃连接以及整体结构的改进。大部分改进工作是在原有模块的基础上，增加<strong>残差模块、Dense 模块、Inception 模块、Attention 模块</strong>等经典网络模块，或综合运用其中的几种模块，以提高网络的分割性能。<strong>残差模块和 Dense 模块</strong>的基本思想是一致的，即：将浅层的输出结果跨层输入到深层网络中，以增强特征融合，加快网络的收敛速度，同时避免梯度消失与爆炸。</p>
-<p>有学者在UNet的基础上引入Dense 模块形成了新的网络架构MDUNet。该网络通过三种不同的密集连接，将不同尺度的特征进行融合，从而加强了特征在当前层的传播 ，同时减少了单一密集连接造成的过拟合。<br><img src="MDUNet.png" alt=""></p>
-<p>Inception模块通过使用不同尺度的卷积核进行多尺度特征学习来提高分割精度，同时使用 1×1卷积改变特征维度，以大大减少参数量。在原Inception模块的基础上，将5×5和7×7大小的卷积核分别因式分解为2个3×3卷积核和3个3×3卷积核，然后将三种卷积核的输出拼接在一起，可以获得不同尺度的空间信息。Inception模块的使用使得网络在保证感受野的前提下，减少了参数量，进而降低了内存需求 。</p>
+<p>UNet模型在结构上的改进主要包括编/解码器、跳跃连接以及整体结构的改进。大部分改进工作是在原有模块的基础上，增加<strong>残差模块、Dense
+模块、Inception 模块、Attention
+模块</strong>等经典网络模块，或综合运用其中的几种模块，以提高网络的分割性能。<strong>残差模块和
+Dense
+模块</strong>的基本思想是一致的，即：将浅层的输出结果跨层输入到深层网络中，以增强特征融合，加快网络的收敛速度，同时避免梯度消失与爆炸。</p>
+<p>有学者在UNet的基础上引入Dense
+模块形成了新的网络架构MDUNet。该网络通过三种不同的密集连接，将不同尺度的特征进行融合，从而加强了特征在当前层的传播
+，同时减少了单一密集连接造成的过拟合。 <img src="MDUNet.png" /></p>
+<p>Inception模块通过使用不同尺度的卷积核进行多尺度特征学习来提高分割精度，同时使用
+1×1卷积改变特征维度，以大大减少参数量。在原Inception模块的基础上，将5×5和7×7大小的卷积核分别因式分解为2个3×3卷积核和3个3×3卷积核，然后将三种卷积核的输出拼接在一起，可以获得不同尺度的空间信息。Inception模块的使用使得网络在保证感受野的前提下，减少了参数量，进而降低了内存需求
+。</p>
 <p>Attention模块通过给特征分配权重（即注意系数），进而有重点地提取有效特征，抑制无关特征。</p>
 
     </div>
@@ -315,7 +329,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UNet%E6%9E%B6%E6%9E%84%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">UNet架构的特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UNet%E7%9A%84%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">UNet的网络结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UNet%E7%9A%84%E6%A8%A1%E5%9E%8B%E6%94%B9%E8%BF%9B"><span class="nav-number">4.</span> <span class="nav-text">UNet的模型改进</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#unet%E6%9E%B6%E6%9E%84%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">UNet架构的特点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#unet%E7%9A%84%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">UNet的网络结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#unet%E7%9A%84%E6%A8%A1%E5%9E%8B%E6%94%B9%E8%BF%9B"><span class="nav-number">4.</span> <span class="nav-text">UNet的模型改进</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

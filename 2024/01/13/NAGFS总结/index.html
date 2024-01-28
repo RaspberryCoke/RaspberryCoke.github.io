@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="本文介绍了一种机器学习辅助神经疾病诊断的方法：network atlas-guided feature selection（基于网络连接图谱的特征选择）。本文是对整个实验的总结。">
+  <meta name="description" content="本文介绍了一种机器学习辅助神经疾病诊断的方法：network atlas-guided feature selection（基于网络连接图谱的特征选择）。 本文是对整个实验的总结。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NAGFS(4)实验总结">
 <meta property="og:url" content="http://example.com/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="RaspberryCoke">
-<meta property="og:description" content="本文介绍了一种机器学习辅助神经疾病诊断的方法：network atlas-guided feature selection（基于网络连接图谱的特征选择）。本文是对整个实验的总结。">
+<meta property="og:description" content="本文介绍了一种机器学习辅助神经疾病诊断的方法：network atlas-guided feature selection（基于网络连接图谱的特征选择）。 本文是对整个实验的总结。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/1.png">
 <meta property="og:image" content="http://example.com/2024/01/13/NAGFS%E6%80%BB%E7%BB%93/2.png">
@@ -204,40 +204,59 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文介绍了一种机器学习辅助神经疾病诊断的方法：network atlas-guided feature selection（基于网络连接图谱的特征选择）。<br>本文是对整个实验的总结。<br><span id="more"></span></p>
+        <p>本文介绍了一种机器学习辅助神经疾病诊断的方法：network atlas-guided
+feature selection（基于网络连接图谱的特征选择）。
+本文是对整个实验的总结。 <span id="more"></span></p>
 <p>在我们本次实验中，我们采用了NAGFS方法进行疾病的诊断。NAGFS方法其中主要涉及到了两种算法：<strong>SIMLR和SNF算法</strong>。在本次实验中，我们花了很大的精力去研究SIMLR方法中的<strong>数学公式</strong>，同时也学习到了很多机器学习相关的知识。本文是对我们学习的成果的简要介绍。</p>
-<pre><code>    注：笔者在最后做了总结，如果对论文不感兴趣可以直接拉到最后。
-</code></pre><h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>本文将从数据预处理、特征选择、分类以及可视化四个方面介绍该课题所用到的核心技术。</p>
+<pre><code>    注：笔者在最后做了总结，如果对论文不感兴趣可以直接拉到最后。</code></pre>
+<h1 id="概述">概述</h1>
+<p>本文将从数据预处理、特征选择、分类以及可视化四个方面介绍该课题所用到的核心技术。</p>
 <p>首先，我们通过fMRI数据的时间序列计算Pearson相关系数，以获得脑区相关矩阵来描述大脑脑区的连接特征。</p>
 <p>然后我们通过SIMLR框架进行聚类。SILMR通过使用多个核函数，有效学习最适合数据集的样本间相似性度量。</p>
-<p><img src="1.png" alt=""></p>
-<center>图1：算法全览</center>
-
+<img src="1.png" />
+<center>
+图1：算法全览
+</center>
 <p>之后，利用SNF技术,通过局部扩散和全局融合过程，将输入网络非线性的整合成一个单一的网络，最后我们通过计算残差网络图谱，也就是两个网络图谱之间的绝对差值，选择差异最大的非零特征，并使用这些特征训练支持向量机分类器进行分类。</p>
-<p>采用上述方法，我们最终取得了较好的分类结果。在实际训练时，我们对选取特征的数量进行的多次试验，最好准确度达到了71.84%，并且通过BrainNet Viewer工具实现了大脑的可视化。</p>
-<h1 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h1><p>我们的原始数据是通过fMRI数据得到的时间序列，这个时间序列的维度是1035×n×116，我们通过时间序列计算每个脑区的Pearson相关系数。</p>
+<p>采用上述方法，我们最终取得了较好的分类结果。在实际训练时，我们对选取特征的数量进行的多次试验，最好准确度达到了71.84%，并且通过BrainNet
+Viewer工具实现了大脑的可视化。</p>
+<h1 id="数据预处理">数据预处理</h1>
+<p>我们的原始数据是通过fMRI数据得到的时间序列，这个时间序列的维度是1035×n×116，我们通过时间序列计算每个脑区的Pearson相关系数。</p>
 <p>我们可以得到每个人的皮尔逊相关系数矩阵是116×116，一共有1035个人，116个脑区，每个人有6670个特征，通过提取上三角矩阵，我们总共可以提取到（116×115）/2个特征，即6670个特征。在时间序列的数据中存在很多零元素，因此导致了得到的皮尔逊相关系数矩阵中很多NAN值，为此，需要将皮尔逊相关稀疏矩阵中的NAN值全部修改为0。我们可以利用脑区相关矩阵来描述大脑脑区的连接特征，这样就得到了本次实验的输入数据。</p>
-<h1 id="特征选择"><a href="#特征选择" class="headerlink" title="特征选择"></a>特征选择</h1><h2 id="NAGFS方法"><a href="#NAGFS方法" class="headerlink" title="NAGFS方法"></a>NAGFS方法</h2><p>NAGFS是一种脑网络图谱引导特征选择的方法。该方法通过学习功能性脑网络图谱来引导特征选择，从整体上提高了对脑网络连接的识别。NAGFS不仅提高了特征选择的性能，而且提升了对神经系统疾病分类的准确度。</p>
+<h1 id="特征选择">特征选择</h1>
+<h2 id="nagfs方法">NAGFS方法</h2>
+<p>NAGFS是一种脑网络图谱引导特征选择的方法。该方法通过学习功能性脑网络图谱来引导特征选择，从整体上提高了对脑网络连接的识别。NAGFS不仅提高了特征选择的性能，而且提升了对神经系统疾病分类的准确度。</p>
 <p>在本课题中，我们通过使用FMRI获得的数据，可以提取出不同脑功能区域的连通性特征。在实际应用中，由于数据的维度过高，为了方便分类，一般使用特征选择进行降维处理。这是因为特征提取会抹去原始数据的生物学含义。传统的特征选择面临着多种挑战。其一是泛化性和可重复性，传统方法在不同数据集之间的表现并不一致，为特定数据集选择最佳的特征选择方法是一件耗时且困难的事。其二是计算成本和可扩展性，传统的方法计算成本过高，而且当特征数量不断增大时，分类性能明显下降。通过使用NAGFS方法，我们可以避免上述问题。</p>
-<h2 id="SIMLR算法"><a href="#SIMLR算法" class="headerlink" title="SIMLR算法"></a>SIMLR算法</h2><p>SIMLR算法是一个从输入的单细胞RNA序列数据中学习细胞与细胞之间相似度矩阵的框架。单细胞的RNA序列数据和我们在本次实验中的数据都是高维特征数据，使用该算法可以对大规模数据进行良好地处理，同时也极大程度上提高了聚类的效果。<br><img src="2.png" alt="图2：SIMLR算法"></p>
-<center>图2：SIMLR算法</center>
-
-
-<h2 id="SNF相似网络融合"><a href="#SNF相似网络融合" class="headerlink" title="SNF相似网络融合"></a>SNF相似网络融合</h2><p>SNF是一种相似网络融合技术，该技术用于将多个相似性网络整合为一个更具代表性的网络，从而提升数据分析和模式识别的准确性和可靠性。<br>SNF相似网络融合技术主要包括以下步骤：</p>
-<ol>
-<li>构建相似性网络：从原始数据中计算出多个相关矩阵，每个矩阵表示一个相似性网络。相似性网络是一种图结构，其中的数据样本被表示为节点，边表示样本之间的相似性或者相关性。</li>
-<li>相似性网络归一化：对每一个相似性网络进行归一化处理，从而确保不同的网络之间的相似性矩阵具有相似的尺度，通过这种方法可以消除不同网络之间的度量差异。</li>
-<li>构建相似性整合矩阵：将归一化之后的相似性矩阵进行整合，从而得到一个融合的相似性矩阵，其中的整合方法可以是简单的加权平均、加权求和或者是其他更复杂的整合方法。</li>
-<li>构建融合网络：基于融合的相似性矩阵构建一个新的融合网络，在这个融合网络中，节点表示数据样本，边的权重表示样本之间的融合相似性。</li>
-</ol>
-<h1 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h1><p>本课题采用的SVM向量机进行分类。SVM分类的基本思想是将样本映射到高维特征空间，并在该空间中寻找一个最优的超平面，使得不同类别的样本能够被最大间隔分开。这种映射是通过核函数来实现的，核函数可以将低维特征空间中的样本映射到高维空间中，从而使得样本在高维空间中更容易分开。简言之，SVM就是一种二类分类模型，他的基本模型是定义在特征空间的间隔最大的线性分类器，SVM的学习策略就是间隔最大化。</p>
+<h2 id="simlr算法">SIMLR算法</h2>
+SIMLR算法是一个从输入的单细胞RNA序列数据中学习细胞与细胞之间相似度矩阵的框架。单细胞的RNA序列数据和我们在本次实验中的数据都是高维特征数据，使用该算法可以对大规模数据进行良好地处理，同时也极大程度上提高了聚类的效果。
+<img src="2.png" alt="图2：SIMLR算法" />
+<center>
+图2：SIMLR算法
+</center>
+<h2 id="snf相似网络融合">SNF相似网络融合</h2>
+<p>SNF是一种相似网络融合技术，该技术用于将多个相似性网络整合为一个更具代表性的网络，从而提升数据分析和模式识别的准确性和可靠性。
+SNF相似网络融合技术主要包括以下步骤： 1.
+构建相似性网络：从原始数据中计算出多个相关矩阵，每个矩阵表示一个相似性网络。相似性网络是一种图结构，其中的数据样本被表示为节点，边表示样本之间的相似性或者相关性。
+2.
+相似性网络归一化：对每一个相似性网络进行归一化处理，从而确保不同的网络之间的相似性矩阵具有相似的尺度，通过这种方法可以消除不同网络之间的度量差异。
+3.
+构建相似性整合矩阵：将归一化之后的相似性矩阵进行整合，从而得到一个融合的相似性矩阵，其中的整合方法可以是简单的加权平均、加权求和或者是其他更复杂的整合方法。
+4.
+构建融合网络：基于融合的相似性矩阵构建一个新的融合网络，在这个融合网络中，节点表示数据样本，边的权重表示样本之间的融合相似性。</p>
+<h1 id="分类">分类</h1>
+<p>本课题采用的SVM向量机进行分类。SVM分类的基本思想是将样本映射到高维特征空间，并在该空间中寻找一个最优的超平面，使得不同类别的样本能够被最大间隔分开。这种映射是通过核函数来实现的，核函数可以将低维特征空间中的样本映射到高维空间中，从而使得样本在高维空间中更容易分开。简言之，SVM就是一种二类分类模型，他的基本模型是定义在特征空间的间隔最大的线性分类器，SVM的学习策略就是间隔最大化。</p>
 <p>SVM是针对线性可分情景的广义线性回归模型，对于线性不可分的情况，我们需要非线性分类器，线性分类器无法解决这种特殊问题，解决方法就是通过“核技巧”将低维特征空间的线性不可分样本映射到高维空间中，实现对非线性样本进行线性分析，本课题就是通过SVM中的高斯核函数进行分类。</p>
-<h1 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h1><p>在matlab中下载BrainNet Viewer工具包，将最后得到的数据进行转换，将所需的边文件、节点文件等导入工具中，将大脑疾病诊断表征权重可视化，从而实现该诊断系统的可视化。<br><img src="3.png" alt="图3：可视化结果"></p>
-<center>图3：可视化结果</center>
-
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在本次实验中，由于我们小组没有在本科阶段接受系统的机器学习教学，因此基础欠佳。我们花费了很长时间去学习机器学习的基础知识，了解了很多机器学习思想，掌握了多种机器学习算法。我们从数据预处理开始从头复现了一个项目，除了算法核心代码我们只做了逐行解读（代码过长，没有展现在本网站中），其余的代码均是独立完成。</p>
+<h1 id="可视化">可视化</h1>
+在matlab中下载BrainNet
+Viewer工具包，将最后得到的数据进行转换，将所需的边文件、节点文件等导入工具中，将大脑疾病诊断表征权重可视化，从而实现该诊断系统的可视化。
+<img src="3.png" alt="图3：可视化结果" />
+<center>
+图3：可视化结果
+</center>
+<h1 id="总结">总结</h1>
+<p>在本次实验中，由于我们小组没有在本科阶段接受系统的机器学习教学，因此基础欠佳。我们花费了很长时间去学习机器学习的基础知识，了解了很多机器学习思想，掌握了多种机器学习算法。我们从数据预处理开始从头复现了一个项目，除了算法核心代码我们只做了逐行解读（代码过长，没有展现在本网站中），其余的代码均是独立完成。</p>
 <p>在我们阅读公式的过程中，我们遇到了很大的困难。其原因有很多：</p>
-<ol>
+<ol type="1">
 <li>这是我们第一次阅读论文，缺乏阅读论文的经验；</li>
 <li>我们这一届计算机科学专业对机器学习领域的教学较少；</li>
 <li>我们没有系统学过矩阵论、最优化等理论；</li>
@@ -333,7 +352,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">数据预处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9"><span class="nav-number">3.</span> <span class="nav-text">特征选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NAGFS%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">NAGFS方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SIMLR%E7%AE%97%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">SIMLR算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SNF%E7%9B%B8%E4%BC%BC%E7%BD%91%E7%BB%9C%E8%9E%8D%E5%90%88"><span class="nav-number">3.3.</span> <span class="nav-text">SNF相似网络融合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%B1%BB"><span class="nav-number">4.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">可视化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">数据预处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9"><span class="nav-number">3.</span> <span class="nav-text">特征选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#nagfs%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">NAGFS方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#simlr%E7%AE%97%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">SIMLR算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#snf%E7%9B%B8%E4%BC%BC%E7%BD%91%E7%BB%9C%E8%9E%8D%E5%90%88"><span class="nav-number">3.3.</span> <span class="nav-text">SNF相似网络融合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%B1%BB"><span class="nav-number">4.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">可视化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
